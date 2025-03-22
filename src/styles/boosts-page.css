@@ -1,0 +1,173 @@
+.boosts-page {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-bottom: 60px;
+    padding-top: 1rem;
+}
+
+.boosts-content {
+    width: 100%;
+    max-width: 365px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.boosts-balance-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.boosts-reward {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.boosts-reward-icon {
+    font-size: 24px;
+}
+
+.boosts-balance-text {
+    color: #f0f0f0;
+    font-size: 32px;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+}
+
+.boosts-balance-label {
+    color: #b0b0b0;
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+    margin-top: 4px;
+}
+
+.boosts-section-title {
+    color: #f0f0f0;
+    font-size: 20px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    margin: 20px 0 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.boosts-card {
+    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    border-radius: 16px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 365px;
+    margin-bottom: 1rem;
+    padding: 0.75rem;
+}
+
+.boosts-card.boosts-free-boosters {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem;
+}
+
+.boosts-booster-item {
+    display: flex;
+    align-items: center;
+    width: 48%;
+}
+
+.boosts-booster-icon {
+    width: 42px;
+    height: 39px;
+    border-radius: 9px;
+    margin-right: 16px;
+    object-fit: contain;
+}
+
+.boosts-booster-details {
+    display: flex;
+    justify-content: space-between;
+    flex: 1;
+}
+
+.boosts-task-text {
+    color: #f0f0f0;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+}
+
+.boosts-booster-count {
+    color: #b0b0b0;
+    font-size: 11px;
+    font-family: "Roboto", sans-serif;
+}
+
+.boosts-task-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding: 8px 12px;
+}
+
+.boosts-task-icon {
+    width: 42px;
+    height: 39px;
+    border-radius: 9px;
+    object-fit: contain;
+}
+
+.boosts-task-details {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+.boosts-task-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.boosts-reward {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.boosts-reward-icon {
+    font-size: 12px;
+}
+
+.boosts-text-xs {
+    color: #b0b0b0;
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+}
+
+.boosts-error {
+    color: #ff4444;
+    font-size: 14px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.boosts-bonus-text {
+    color: #f0f0f0;
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+    text-align: right;
+}

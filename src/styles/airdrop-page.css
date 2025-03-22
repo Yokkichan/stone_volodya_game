@@ -1,0 +1,211 @@
+.airdrop-page {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    padding-bottom: 60px;
+    /* Темний фон із градієнтом */
+    background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+}
+
+/* Додаємо градієнтне свічення у верхній частині сторінки */
+.airdrop-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: radial-gradient(circle at 50% 0%, rgba(0, 123, 255, 0.3) 0%, transparent 70%);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.content {
+    width: 100%;
+    max-width: 365px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Прибираємо плашку, залишаємо вміст прямо на фоні */
+    z-index: 1;
+}
+
+.coin-pig {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.coin-pig:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.fren-zone {
+    color: #ffffff;
+    font-size: 36px;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.airdrop-description {
+    color: #e0e0e0;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    width: 100%;
+    max-width: 365px;
+    margin-bottom: 1.5rem;
+    opacity: 0.9;
+}
+
+.sub-title {
+    color: #ffffff;
+    font-size: 20px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для шкалы прогресса */
+.progress-wrapper {
+    width: 100%;
+    max-width: 330px;
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+.progress-label {
+    color: #ffffff;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.progress-container {
+    width: 100%;
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #00c4ff 0%, #007bff 100%);
+    border-radius: 6px;
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+}
+
+.progress-slider {
+    position: absolute;
+    top: 37px;
+    transform: translate(-50%, -10px);
+    width: 20px;
+    height: 20px;
+    background: linear-gradient(90deg, #00c4ff 0%, #007bff 100%);
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.7);
+    transition: left 0.5s ease-in-out;
+}
+
+.progress-marks {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.5rem;
+}
+
+.progress-mark {
+    color: #e0e0e0;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+}
+
+.progress-value {
+    color: #ffffff;
+    font-size: 14px;
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    margin-top: 0.5rem;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* Стили для кнопок в цвете Telegram */
+.connect-button {
+    background: linear-gradient(90deg, #00c4ff 0%, #007bff 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    max-width: 365px;
+    height: 48px;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.connect-button:disabled {
+    background: rgba(255, 255, 255, 0.2);
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.connect-button:hover:not(:disabled) {
+    background: linear-gradient(90deg, #00d4ff 0%, #0088ff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.5);
+}
+
+.connect-button:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.add-stones-button {
+    background: linear-gradient(90deg, #00c4ff 0%, #007bff 100%);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
+    width: 100%;
+    max-width: 365px;
+    height: 48px;
+    color: #ffffff;
+    font-size: 18px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.add-stones-button:hover {
+    background: linear-gradient(90deg, #00d4ff 0%, #0088ff 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.5);
+}
+
+.add-stones-button:active {
+    transform: scale(0.95);
+}

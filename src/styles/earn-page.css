@@ -1,0 +1,145 @@
+.earn-page {
+    position: relative;
+    height: 100vh;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+    padding-bottom: 60px;
+    padding-top: 1rem;
+}
+
+.earn-content {
+    width: 100%;
+    max-width: 365px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.earn-coin-image {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 20px auto;
+    object-fit: contain;
+}
+
+.earn-title {
+    color: #f0f0f0;
+    font-size: 32px;
+    font-family: "Roboto", sans-serif;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.earn-section-title {
+    color: #f0f0f0;
+    font-size: 20px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    margin: 20px 0 10px;
+    text-align: center;
+    width: 100%;
+}
+
+.earn-card {
+    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    border-radius: 16px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: 340px;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+}
+
+.earn-task-item {
+    display: flex;
+    align-items: center;
+    padding: 10px 12px;
+    cursor: pointer;
+}
+
+.earn-task-item.completed {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.earn-task-item.loading {
+    opacity: 0.8;
+    cursor: wait;
+}
+
+.earn-task-icon {
+    width: 42px;
+    height: 39px;
+    border-radius: 9px;
+    background-color: #d9d9d9;
+    margin-right: 16px;
+}
+
+.earn-task-icon.connect-wallet,
+.earn-task-icon.stone-onboarding,
+.earn-task-icon.subscribe-telegram,
+.earn-task-icon.follow-twitter,
+.earn-task-icon.join-discord,
+.earn-task-icon.subscribe-youtube,
+.earn-task-icon.follow-instagram {
+    background-color: #d9d9d9;
+}
+
+.earn-task-details {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.earn-task-text {
+    color: #f0f0f0;
+    font-size: 16px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+}
+
+.earn-reward {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+}
+
+.earn-reward-icon {
+    font-size: 12px;
+}
+
+.earn-text-xs {
+    color: #b0b0b0;
+    font-size: 10px;
+    font-family: "Roboto", sans-serif;
+}
+
+.earn-task-status {
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+}
+
+.earn-task-status.completed {
+    color: #4caf50;
+}
+
+.earn-task-status.loading {
+    color: #ff9800;
+}
+
+.earn-error {
+    color: #ff4444;
+    font-size: 14px;
+    margin-top: 10px;
+    text-align: center;
+}

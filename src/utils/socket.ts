@@ -1,6 +1,5 @@
-// src/utils/socket.ts
 import { io, Socket } from "socket.io-client";
-import {AppDispatch} from "../store";
+import { AppDispatch } from "../store";
 
 const SOCKET_URL = "https://bishop-restoration-come-dayton.trycloudflare.com";
 
@@ -10,10 +9,23 @@ socket.on("connect", () => console.log("[socket] Connected"));
 socket.on("disconnect", () => console.log("[socket] Disconnected"));
 socket.on("connect_error", (error) => console.error("[socket] Connection error:", error));
 
+// Интерфейсы
+export interface SocketUserUpdate {
+    stones: number;
+    league: string;
+    lastAutoBotUpdate: string;
+    energy: number; // Добавлено
+}
+
+export interface SocketScoreUpdate {
+    id: string;
+    score: number;
+}
+
 // Функция для инициализации подписок
 export const initSocketListeners = (
     telegramId: string,
-    onUserUpdate: (data: { stones: number; league: string; energy?: number }) => void
+    onUserUpdate: (data: SocketUserUpdate) => void
 ) => {
     socket.connect();
     socket.emit("join", telegramId);
@@ -22,17 +34,11 @@ export const initSocketListeners = (
 
 // Функция для очистки подписок
 export const cleanupSocketListeners = (
-    onUserUpdate: (data: { stones: number; league: string; energy?: number }) => void
+    onUserUpdate: (data: SocketUserUpdate) => void
 ) => {
     socket.off("userUpdate", onUserUpdate);
     socket.disconnect();
 };
-
-export interface SocketUserUpdate {
-    stones: number;
-    league: string;
-    lastAutoBotUpdate: string;
-}
 
 export const initMainPageSocket = (
     socket: Socket,
@@ -46,7 +52,7 @@ export const initMainPageSocket = (
 ) => {
     socket.emit("join", telegramId);
     socket.on("connect", () => socket.emit("join", telegramId));
-    socket.on("updateScore", (data: { id: string; score: number }) => {
+    socket.on("updateScore", (data: SocketScoreUpdate) => {
         if (data.id === telegramId && data.score !== stones) {
             dispatch(setUser({ stones: data.score }));
         }
@@ -62,15 +68,3 @@ export const initMainPageSocket = (
         socket.off("userUpdate");
     };
 };
-
-// src/utils/socket.ts
-export interface SocketUserUpdate {
-    stones: number;
-    league: string;
-    lastAutoBotUpdate: string;
-}
-
-export interface SocketScoreUpdate {
-    id: string;
-    score: number;
-}

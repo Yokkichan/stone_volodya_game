@@ -1,3 +1,4 @@
+/* src/pages/EarnPage.css */
 .earn-page {
     position: relative;
     height: 100vh;
@@ -68,12 +69,11 @@
 
 .earn-task-item.completed {
     opacity: 0.6;
-    cursor: not-allowed;
+    cursor: default;
 }
 
 .earn-task-item.loading {
     opacity: 0.8;
-    cursor: wait;
 }
 
 .earn-task-icon {
@@ -82,16 +82,6 @@
     border-radius: 9px;
     background-color: #d9d9d9;
     margin-right: 16px;
-}
-
-.earn-task-icon.connect-wallet,
-.earn-task-icon.stone-onboarding,
-.earn-task-icon.subscribe-telegram,
-.earn-task-icon.follow-twitter,
-.earn-task-icon.join-discord,
-.earn-task-icon.subscribe-youtube,
-.earn-task-icon.follow-instagram {
-    background-color: #d9d9d9;
 }
 
 .earn-task-details {
@@ -124,17 +114,30 @@
     font-family: "Roboto", sans-serif;
 }
 
-.earn-task-status {
+.earn-task-status.completed {
+    color: #4caf50;
     font-size: 12px;
     font-family: "Roboto", sans-serif;
 }
 
-.earn-task-status.completed {
-    color: #4caf50;
+.earn-task-button.confirm {
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%); /* Золотой градиент в стиле проекта */
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    margin-left: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
-.earn-task-status.loading {
-    color: #ff9800;
+.earn-task-button.confirm:disabled {
+    background: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
 }
 
 .earn-error {

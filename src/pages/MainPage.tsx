@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState, AppDispatch } from "../store";
-import { setUser, decreaseEnergy, increaseEnergy } from "../store/slices/userSlice";
+import { setUser } from "../store/slices/userSlice";
 import { useEffect, useCallback, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import WebApp from "@twa-dev/sdk";
@@ -20,14 +20,21 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
     const user = useSelector((state: RootState) => state.user.user);
-    const { telegramId = "", username = "", stones = 0, energy = 1000,
-        energyRegenRate = 1, stonesPerClick = 1, maxEnergy = 1000, autoStonesPerSecond = 0
+    const {
+        telegramId = "",
+        username = "",
+        stones = 0,
+        energy = 1000,
+        stonesPerClick = 1,
+        maxEnergy = 1000,
+        autoStonesPerSecond = 0,
     } = user || {};
 
     const safeLeague = (user?.league || "Pebble") as LeagueName;
 
     const [pendingStones, setPendingStones] = useState(0);
     const [isInitialized, setIsInitialized] = useState(false);
+    const [lastSyncTime, setLastSyncTime] = useState(Date.now());
     const coinRef = useRef<HTMLImageElement>(null);
     const coinHolderRef = useRef<HTMLDivElement>(null);
     const middleSectionRef = useRef<HTMLDivElement>(null);
@@ -35,7 +42,12 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
 
     useEffect(() => {
         if (!telegramId || !username) {
-            dispatch(setUser({ telegramId: String(webAppUser.id), username: webAppUser.username || `Miner_${Math.random().toString(36).substring(7)}` }));
+            dispatch(
+                setUser({
+                    telegramId: String(webAppUser.id),
+                    username: webAppUser.username || `Miner_${Math.random().toString(36).substring(7)}`,
+                })
+            );
             return;
         }
 
@@ -43,12 +55,14 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
             try {
                 const updatedData = await updateBalanceAPI(0, false);
                 dispatch(setUser(updatedData));
+                setLastSyncTime(Date.now());
                 setIsInitialized(true);
 
                 const offlineStones = calculateOfflineStones(updatedData.lastAutoBotUpdate);
                 if (offlineStones > 0) {
                     const offlineData = await updateBalanceAPI(offlineStones, false);
                     dispatch(setUser(offlineData));
+                    setLastSyncTime(Date.now());
                 }
                 localStorage.setItem(`lastAutoBotUpdate_${telegramId}`, new Date().toISOString());
             } catch (error) {
@@ -62,34 +76,31 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
     useEffect(() => {
         if (!isInitialized) return;
 
-        const energyInterval = setInterval(() => {
-            if (energy < maxEnergy) dispatch(increaseEnergy(energyRegenRate));
+        // Синхронизация с сервером каждую секунду
+        const syncInterval = setInterval(async () => {
+            try {
+                const updatedData = await updateBalanceAPI(pendingStones, false);
+                dispatch(setUser(updatedData));
+                setLastSyncTime(Date.now());
+                setPendingStones(0);
+                localStorage.setItem(`lastAutoBotUpdate_${telegramId}`, new Date().toISOString());
+            } catch (error) {
+                console.error("[MainPage] Sync error:", error);
+            }
         }, 1000);
 
+        // Автоматический сбор камней
         const autoTapInterval = setInterval(() => {
             if (autoStonesPerSecond > 0) {
                 setPendingStones((prev) => prev + autoStonesPerSecond);
             }
         }, 1000);
 
-        const syncInterval = setInterval(() => {
-            if (pendingStones > 0) {
-                updateBalanceAPI(pendingStones, false)
-                    .then((data) => {
-                        dispatch(setUser(data));
-                        setPendingStones(0);
-                        localStorage.setItem(`lastAutoBotUpdate_${telegramId}`, new Date().toISOString());
-                    })
-                    .catch((error) => console.error("[MainPage] Sync error:", error));
-            }
-        }, 10000);
-
         return () => {
-            clearInterval(energyInterval);
-            clearInterval(autoTapInterval);
             clearInterval(syncInterval);
+            clearInterval(autoTapInterval);
         };
-    }, [isInitialized, energy, maxEnergy, autoStonesPerSecond, pendingStones, dispatch, telegramId]);
+    }, [isInitialized, pendingStones, dispatch, telegramId, lastSyncTime, autoStonesPerSecond]);
 
     useEffect(() => {
         if (!telegramId || !socket) return;
@@ -97,6 +108,7 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
         socket.emit("join", telegramId);
         const handleUserUpdate = (data: SocketUserUpdate) => {
             dispatch(setUser(data));
+            setLastSyncTime(Date.now());
             if (data.stones >= stones + pendingStones) setPendingStones(0);
         };
         const handleScoreUpdate = (data: SocketScoreUpdate) => {
@@ -114,54 +126,59 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
         };
     }, [socket, telegramId, stones, pendingStones, dispatch]);
 
-    const calculateOfflineStones = useCallback((lastUpdate?: string) => {
-        if (autoStonesPerSecond <= 0 || !lastUpdate) return 0;
-        const secondsPassed = Math.floor((Date.now() - new Date(lastUpdate).getTime()) / 1000);
-        return secondsPassed > 0 ? Math.floor(autoStonesPerSecond * secondsPassed) : 0;
-    }, [autoStonesPerSecond]);
+    const calculateOfflineStones = useCallback(
+        (lastUpdate?: string) => {
+            if (autoStonesPerSecond <= 0 || !lastUpdate) return 0;
+            const secondsPassed = Math.floor((Date.now() - new Date(lastUpdate).getTime()) / 1000);
+            return secondsPassed > 0 ? Math.floor(autoStonesPerSecond * secondsPassed) : 0;
+        },
+        [autoStonesPerSecond]
+    );
 
-    const handleCollect = useCallback(async (event: React.MouseEvent | React.TouchEvent) => {
-        if (energy < 1) return;
+    const handleCollect = useCallback(
+        async (event: React.MouseEvent | React.TouchEvent) => {
+            if (energy < 1) return;
 
-        const coin = coinRef.current;
-        if (coin) {
-            const rect = coin.getBoundingClientRect();
-            const clientX = "touches" in event ? event.touches[0].clientX : event.clientX;
-            const clientY = "touches" in event ? event.touches[0].clientY : event.clientY;
-            createStoneEffect(clientX - rect.left, clientY - rect.top);
+            const coin = coinRef.current;
+            if (coin) {
+                const rect = coin.getBoundingClientRect();
+                const clientX = "touches" in event ? event.touches[0].clientX : event.clientX;
+                const clientY = "touches" in event ? event.touches[0].clientY : event.clientY;
+                createStoneEffect(clientX - rect.left, clientY - rect.top);
 
-            // Анимация наклона монеты
-            const x = Math.abs(rect.x - clientX);
-            const y = Math.abs(rect.y - clientY);
-            const halfWidth = rect.width / 2;
-            const halfHeight = rect.height / 2;
-            const calcAngleX = (x - halfWidth) / 16;
-            const calcAngleY = (y - halfHeight) / 14 * -1;
+                const x = Math.abs(rect.x - clientX);
+                const y = Math.abs(rect.y - clientY);
+                const halfWidth = rect.width / 2;
+                const halfHeight = rect.height / 2;
+                const calcAngleX = (x - halfWidth) / 16;
+                const calcAngleY = ((y - halfHeight) / 14) * -1;
 
-            coin.style.perspective = `${halfWidth * 4}px`;
-            if (Math.floor(calcAngleX) === 0 && Math.floor(calcAngleY) === 0) {
-                coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`;
-            } else {
-                coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg)`;
+                coin.style.perspective = `${halfWidth * 4}px`;
+                if (Math.floor(calcAngleX) === 0 && Math.floor(calcAngleY) === 0) {
+                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`;
+                } else {
+                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg)`;
+                }
+                WebApp.HapticFeedback.impactOccurred("medium");
+
+                setTimeout(() => {
+                    coin.style.transform = "rotateY(0deg) rotateX(0deg)";
+                }, 100);
             }
-            WebApp.HapticFeedback.impactOccurred("medium");
 
-            setTimeout(() => {
-                coin.style.transform = "rotateY(0deg) rotateX(0deg)";
-            }, 100);
-        }
-
-        try {
-            dispatch(decreaseEnergy(1));
-            const totalStones = stonesPerClick + pendingStones;
-            const updatedData = await updateBalanceAPI(totalStones, true);
-            dispatch(setUser(updatedData));
-            setPendingStones(0);
-            socket.emit("updateScore", { id: telegramId, name: username, score: updatedData.stones });
-        } catch (error) {
-            console.error("[MainPage] Tap error:", error);
-        }
-    }, [energy, stonesPerClick, pendingStones, dispatch, socket, telegramId, username]);
+            try {
+                const totalStones = stonesPerClick + pendingStones;
+                const updatedData = await updateBalanceAPI(totalStones, true);
+                dispatch(setUser(updatedData));
+                setLastSyncTime(Date.now());
+                setPendingStones(0);
+                socket.emit("updateScore", { id: telegramId, name: username, score: updatedData.stones });
+            } catch (error) {
+                console.error("[MainPage] Tap error:", error);
+            }
+        },
+        [energy, stonesPerClick, pendingStones, dispatch, socket, telegramId, username]
+    );
 
     const createStoneEffect = (x: number, y: number) => {
         const middleSection = middleSectionRef.current;
@@ -190,9 +207,15 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                     <div className="top-section">
                         <div className="avatar-container">
                             {webAppUser.photo_url ? (
-                                <img src={webAppUser.photo_url} alt="Avatar" className="w-10 h-10 rounded-full border border-white" />
+                                <img
+                                    src={webAppUser.photo_url}
+                                    alt="Avatar"
+                                    className="w-10 h-10 rounded-full border border-white"
+                                />
                             ) : (
-                                <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white">?</div>
+                                <div className="w-10 h-10 rounded-full bg-gray-500 flex items-center justify-center text-white">
+                                    ?
+                                </div>
                             )}
                         </div>
                         <div className="score-holder stones">
@@ -203,7 +226,10 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                     <div className="middle-section" ref={middleSectionRef}>
                         <button
                             onClick={handleCollect}
-                            onTouchStart={(e) => { e.preventDefault(); handleCollect(e); }}
+                            onTouchStart={(e) => {
+                                e.preventDefault();
+                                handleCollect(e);
+                            }}
                             disabled={energy < 1}
                             className="coin-button"
                         >
@@ -215,9 +241,12 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                     <div className="bottom-section">
                         <div className="energy-container">
                             <div className="energy-bar">
-                                <div className="energy-bar-slider" style={{ width: `${(energy / maxEnergy) * 100}%` }} />
+                                <div
+                                    className="energy-bar-slider"
+                                    style={{ width: `${(energy / maxEnergy) * 100}%` }}
+                                />
                             </div>
-                            <span className="energy-value">{energy}/{maxEnergy}</span>
+                            <span className="energy-value">{Math.floor(energy)}/{maxEnergy}</span>
                         </div>
                         <button onClick={() => navigate("/leaderboard")} className="rating-button">
                             <div className="rating-left">

@@ -1,10 +1,9 @@
 // src/pages/EarnPage.tsx
-import { useState } from "react"; // Убираем useEffect
+import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import { setUser } from "../store/slices/userSlice";
-import { updateBalance as updateBalanceAPI } from "../utils/api";
-import { TaskItem } from "../components/TaskItem";
+import { completeTask } from "../utils/api";
 import coinLogo from "../assets/coin.png";
 import subscribeTelegramIcon from "../assets/earn/telegram.png";
 import followTwitterIcon from "../assets/earn/x.png";
@@ -38,25 +37,31 @@ const EarnPage = () => {
         { name: "share_tiktok", icon: shareTiktokIcon, reward: 1000, label: "Share Us on TikTok", link: "https://tiktok.com" },
     ];
 
-    const earnReward = async (task: Task) => {
-        if (completedTasks.includes(task.name)) return;
+    const handleConfirmTask = async (task: Task) => {
+        if (completedTasks.includes(task.name)) {
+            console.log("Task already completed:", { taskName: task.name });
+            return;
+        }
+
+        console.log("Confirming task:", { taskName: task.name });
 
         setLoadingTask(task.name);
         setError(null);
-        window.open(task.link, "_blank");
-
-        // Имитация выполнения задачи
-        await new Promise((resolve) => setTimeout(resolve, 5000));
 
         try {
-            const updatedUser = await updateBalanceAPI(task.reward, true);
-            dispatch(setUser({ ...updatedUser, tasksCompleted: [...completedTasks, task.name] }));
-            alert(`Reward earned! You received ${task.reward} stones.`);
-        } catch (err) {
+            const updatedUser = await completeTask(task.name);
+            dispatch(setUser(updatedUser));
+        } catch (err: unknown) { // Заменили any на unknown
             console.error("[EarnPage] Error:", err);
-            setError("Failed to claim reward. Try again.");
+            setError(err instanceof Error ? err.message : "Failed to confirm task. Try again.");
         } finally {
             setLoadingTask(null);
+        }
+    };
+
+    const handleTaskClick = (task: Task) => {
+        if (!completedTasks.includes(task.name)) {
+            window.open(task.link, "_blank");
         }
     };
 
@@ -71,26 +76,68 @@ const EarnPage = () => {
                 <h2 className="earn-section-title">On Boarding</h2>
                 <div className="earn-card">
                     {onboardingTasks.map((task) => (
-                        <TaskItem
+                        <div
                             key={task.name}
-                            task={task}
-                            isLoading={loadingTask === task.name}
-                            isCompleted={completedTasks.includes(task.name)}
-                            onClick={() => earnReward(task)}
-                        />
+                            className={`earn-task-item ${completedTasks.includes(task.name) ? "completed" : ""} ${loadingTask === task.name ? "loading" : ""}`}
+                            onClick={() => handleTaskClick(task)}
+                        >
+                            <img src={task.icon} alt={task.label} className="earn-task-icon" />
+                            <div className="earn-task-details">
+                                <span className="earn-task-text">{task.label}</span>
+                                <div className="earn-reward">
+                                    <span className="earn-reward-icon">🪨</span>
+                                    <span className="earn-text-xs">{task.reward}</span>
+                                </div>
+                            </div>
+                            {completedTasks.includes(task.name) ? (
+                                <span className="earn-task-status completed">Completed</span>
+                            ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleConfirmTask(task);
+                                    }}
+                                    disabled={loadingTask === task.name}
+                                    className="earn-task-button confirm"
+                                >
+                                    {loadingTask === task.name ? "Loading..." : "Confirm"}
+                                </button>
+                            )}
+                        </div>
                     ))}
                 </div>
 
                 <h2 className="earn-section-title">Specials</h2>
                 <div className="earn-card">
                     {specialTasks.map((task) => (
-                        <TaskItem
+                        <div
                             key={task.name}
-                            task={task}
-                            isLoading={loadingTask === task.name}
-                            isCompleted={completedTasks.includes(task.name)}
-                            onClick={() => earnReward(task)}
-                        />
+                            className={`earn-task-item ${completedTasks.includes(task.name) ? "completed" : ""} ${loadingTask === task.name ? "loading" : ""}`}
+                            onClick={() => handleTaskClick(task)}
+                        >
+                            <img src={task.icon} alt={task.label} className="earn-task-icon" />
+                            <div className="earn-task-details">
+                                <span className="earn-task-text">{task.label}</span>
+                                <div className="earn-reward">
+                                    <span className="earn-reward-icon">🪨</span>
+                                    <span className="earn-text-xs">{task.reward}</span>
+                                </div>
+                            </div>
+                            {completedTasks.includes(task.name) ? (
+                                <span className="earn-task-status completed">Completed</span>
+                            ) : (
+                                <button
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleConfirmTask(task);
+                                    }}
+                                    disabled={loadingTask === task.name}
+                                    className="earn-task-button confirm"
+                                >
+                                    {loadingTask === task.name ? "Loading..." : "Confirm"}
+                                </button>
+                            )}
+                        </div>
                     ))}
                 </div>
 

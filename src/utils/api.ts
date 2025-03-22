@@ -1,4 +1,3 @@
-// src/utils/api.ts
 import axios, { AxiosError } from "axios";
 import { store } from "../store";
 
@@ -73,7 +72,7 @@ export const buySkin = async (skinName: string, paymentMethod: "stones" | "ton")
     }
 };
 
-export const getReferalFriends = async () => { // Убираем telegramId, он добавится через перехватчик
+export const getReferalFriends = async () => {
     try {
         const response = await api.get("/referral/friends");
         return response.data;
@@ -106,5 +105,14 @@ export const claimAirdrop = async () => {
         return response.data;
     } catch (error) {
         handleApiError(error, "Error in claimAirdrop");
+    }
+};
+
+export const completeTask = async (taskName: string) => { // Убираем telegramId, он добавится через интерцептор
+    try {
+        const response = await api.post("/earn/completeTask", { taskName });
+        return response.data;
+    } catch (error) {
+        handleApiError(error, "Error in completeTask");
     }
 };

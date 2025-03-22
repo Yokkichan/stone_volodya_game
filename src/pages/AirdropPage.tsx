@@ -1,10 +1,9 @@
-// src/pages/AirdropPage.tsx
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import { setUser } from "../store/slices/userSlice";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useTonConnectUI, useTonAddress } from "@tonconnect/ui-react";
-import { connectTonWallet, claimAirdrop, updateBalance as updateBalanceAPI } from "../utils/api";
+import { connectTonWallet, claimAirdrop, addAirdropProgress } from "../utils/api";
 import coinPig from "../assets/coin_pig.png";
 import { AIRDROP_CONFIG } from "../config/airdrop";
 
@@ -12,16 +11,13 @@ const AirdropPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const user = useSelector((state: RootState) => state.user.user);
     const stones = user?.stones ?? 0;
-    const [containerStones, setContainerStones] = useState(0);
+    const airdropProgress = user?.airdropProgress ?? 0;
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [tonConnectUI] = useTonConnectUI();
     const tonAddress = useTonAddress();
 
-    useEffect(() => {
-        // Предполагаем, что containerStones может прийти с бэкенда в будущем
-        if (user?.airdropStones) setContainerStones(user.airdropStones);
-    }, [user?.airdropStones]);
+    console.log("[AirdropPage] Current user state before action:", user);
 
     const handleAddStones = async () => {
         if (stones < AIRDROP_CONFIG.STONES_TO_ADD || isLoading) {
@@ -31,9 +27,10 @@ const AirdropPage = () => {
         setIsLoading(true);
         setError(null);
         try {
-            const updatedData = await updateBalanceAPI(-AIRDROP_CONFIG.STONES_TO_ADD, false);
-            dispatch(setUser({ ...updatedData, airdropStones: containerStones + AIRDROP_CONFIG.STONES_TO_ADD }));
-            setContainerStones((prev) => prev + AIRDROP_CONFIG.STONES_TO_ADD);
+            const updatedUser = await addAirdropProgress(AIRDROP_CONFIG.STONES_TO_ADD);
+            console.log("[AirdropPage] Updated user from API:", updatedUser);
+            dispatch(setUser(updatedUser));
+            console.log("[AirdropPage] User state after dispatch:", user);
         } catch (error) {
             console.error("[Airdrop] Add stones error:", error);
             setError("Failed to add stones");
@@ -50,9 +47,8 @@ const AirdropPage = () => {
             if (!tonAddress) await tonConnectUI.connectWallet();
             if (tonAddress) {
                 await connectTonWallet(tonAddress);
-                await claimAirdrop();
-                dispatch(setUser({ ...user, tonWallet: tonAddress, tasksCompleted: [...(user?.tasksCompleted || []), "airdrop"] }));
-                setContainerStones(0); // Сбрасываем после получения
+                const updatedUser = await claimAirdrop();
+                dispatch(setUser(updatedUser));
                 alert(`Airdrop claimed! ${AIRDROP_CONFIG.REWARD} SV coins sent to your wallet.`);
             }
         } catch (error) {
@@ -63,9 +59,9 @@ const AirdropPage = () => {
         }
     };
 
-    const canClaimAirdrop = containerStones >= AIRDROP_CONFIG.REQUIRED_STONES;
+    const canClaimAirdrop = airdropProgress >= AIRDROP_CONFIG.REQUIRED_STONES;
     const hasClaimed = user?.tasksCompleted?.includes("airdrop") || false;
-    const progressPercentage = Math.min((containerStones / AIRDROP_CONFIG.REQUIRED_STONES) * 100, 100);
+    const progressPercentage = Math.min((airdropProgress / AIRDROP_CONFIG.REQUIRED_STONES) * 100, 100);
 
     return (
         <div className="airdrop-page">

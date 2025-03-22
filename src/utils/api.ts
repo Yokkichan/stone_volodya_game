@@ -108,6 +108,18 @@ export const claimAirdrop = async () => {
     }
 };
 
+export const addAirdropProgress = async (stonesToAdd: number) => {
+    try {
+        console.log("[api.ts] Sending addAirdropProgress request with stonesToAdd:", stonesToAdd);
+        const response = await api.post("/airdrop/add-progress", { stonesToAdd });
+        console.log("[api.ts] addAirdropProgress response:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("[api.ts] Error in addAirdropProgress:", error);
+        throw error;
+    }
+};
+
 export const completeTask = async (taskName: string) => { // Убираем telegramId, он добавится через интерцептор
     try {
         const response = await api.post("/earn/completeTask", { taskName });

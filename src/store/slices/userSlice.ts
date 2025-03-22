@@ -1,4 +1,3 @@
-// src/store/slices/userSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export interface UserState {
@@ -6,7 +5,7 @@ export interface UserState {
     username: string;
     stones: number;
     energy: number;
-    boosts: { name: string; level: number; count?: number }[]; // count опционален
+    boosts: { name: string; level: number; count?: number }[];
     skins: string[];
     tasksCompleted: string[];
     league: string;
@@ -18,8 +17,9 @@ export interface UserState {
     maxEnergy: number;
     lastAutoBotUpdate?: string;
     isPremium: boolean;
-    airdropStones?: number; // Добавляем для Airdrop
-    referralBonus?: number; // Опционально, может отсутствовать
+    airdropStones?: number;
+    referralBonus?: number;
+    airdropProgress: number;
 }
 
 const initialState: { user: UserState | null } = {
@@ -32,12 +32,16 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, action: PayloadAction<Partial<UserState>>) => {
             const payload = action.payload;
-            if (!payload.telegramId) return;
+            console.log("[userSlice] setUser payload:", payload); // Лог входных данных
+            if (!payload.telegramId) {
+                console.log("[userSlice] setUser: telegramId missing, skipping update");
+                return;
+            }
 
-            state.user = {
+            const updatedUser = {
                 ...(state.user || {}),
                 ...payload,
-                telegramId: payload.telegramId, // Обязательное поле
+                telegramId: payload.telegramId,
                 username: payload.username || "Unknown",
                 stones: payload.stones ?? 0,
                 energy: payload.energy ?? 1000,
@@ -50,7 +54,11 @@ const userSlice = createSlice({
                 autoStonesPerSecond: payload.autoStonesPerSecond ?? 0,
                 maxEnergy: payload.maxEnergy ?? 1000,
                 isPremium: payload.isPremium ?? false,
+                airdropProgress: payload.airdropProgress ?? (state.user?.airdropProgress ?? 0), // Сохраняем старое значение, если новое не пришло
             } as UserState;
+
+            state.user = updatedUser;
+            console.log("[userSlice] Updated user state:", updatedUser); // Лог результата
         },
         clearUser: (state) => {
             state.user = null;

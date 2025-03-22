@@ -19,6 +19,7 @@ export interface UserState {
     lastAutoBotUpdate?: string;
     isPremium: boolean;
     airdropStones?: number; // Добавляем для Airdrop
+    referralBonus?: number; // Опционально, может отсутствовать
 }
 
 const initialState: { user: UserState | null } = {

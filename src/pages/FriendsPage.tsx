@@ -7,7 +7,7 @@ import { generateInviteLink, openInviteLink } from "../utils/referral";
 import coinImage from "../assets/frens/icon_coin.png";
 import telegramplus from "../assets/frens/telegramplus.png";
 import friendIcon from "../assets/frens/telegram.png";
-import {getReferalFriends} from "../utils/api.ts";
+import { getReferalFriends } from "../utils/api.ts";
 
 interface Friend {
     telegramId: string;
@@ -27,6 +27,7 @@ const FriendsPage = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const telegramId = user?.telegramId || "";
     const referralCode = user?.referralCode || "";
+    const referralBonusFromRedux = user?.referralBonus || 0; // Для сравнения
     const [invitedFriends, setInvitedFriends] = useState<Friend[]>([]);
     const [totalBonus, setTotalBonus] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -37,6 +38,8 @@ const FriendsPage = () => {
             setIsLoading(true);
             try {
                 const data: FriendsResponse = await getReferalFriends();
+                console.log("[FriendsPage] API Response:", data);
+                console.log("[FriendsPage] referralBonus from Redux:", referralBonusFromRedux);
                 setInvitedFriends(data.invitedFriends || []);
                 setTotalBonus(data.totalBonus || 0);
             } catch (error) {
@@ -46,7 +49,7 @@ const FriendsPage = () => {
             }
         };
         fetchFriends();
-    }, [telegramId]);
+    }, [telegramId, referralBonusFromRedux]);
 
     const handleInvite = (isPremium: boolean) => {
         const link = generateInviteLink(referralCode, isPremium);

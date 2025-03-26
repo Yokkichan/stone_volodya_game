@@ -1,9 +1,8 @@
 .earn-page {
-    position: absolute;
+    position: relative; /* Убираем absolute */
     top: 0;
     left: 0;
-    width: 100%;
-    min-height: 100%;
+    min-height: 100vh; /* Меняем на min-height */
     padding: 1rem 0;
     margin: 0;
     font-family: "Roboto", sans-serif;
@@ -16,7 +15,7 @@
     z-index: 0;
     isolation: isolate;
     box-sizing: border-box;
-    padding-bottom: 80px; /* Увеличиваем отступ снизу для нижнего меню */
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
 }
 
 .earn-page::before {
@@ -42,7 +41,7 @@
     min-height: 100%;
     position: relative;
     z-index: 1;
-    padding-bottom: 20px; /* Дополнительный отступ снизу для контента */
+    padding-bottom: 20px;
     box-sizing: border-box;
 }
 

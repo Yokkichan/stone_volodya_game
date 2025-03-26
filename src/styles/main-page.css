@@ -1,11 +1,14 @@
 .dashboard {
-    min-height: 100vh;
-    width: 100%;
+    position: relative;
+    min-height: 100vh; /* Меняем height на min-height */
+    width: 100vw;
+    max-width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    position: relative;
-    background-image: url("src/assets/background1.png");
+    justify-content: center;
+    padding-bottom: 60px;
+    overflow-y: auto; /* Добавляем прокрутку */
+    background-image: url("../assets/background1.jpeg");
     background-size: cover;
 }
 
@@ -36,12 +39,12 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 365px; /* Ограничиваем ширину для центрирования */
+    max-width: 365px;
     padding: 0.5rem 1rem;
     position: fixed;
     top: 0;
     left: 50%;
-    transform: translateX(-50%); /* Центрируем по горизонтали */
+    transform: translateX(-50%);
     z-index: 50;
     height: 50px;
 }
@@ -105,10 +108,11 @@
     align-items: center;
     justify-content: center;
     width: 100%;
-    max-width: 365px; /* Ограничиваем ширину для центрирования */
+    max-width: 365px;
     height: 300px;
-    margin: 60px auto 2rem; /* Отступ сверху для .top-section */
+    margin: 60px auto 2rem;
     position: relative;
+    overflow: visible; /* Убираем ограничения */
 }
 
 .coin-button {
@@ -138,7 +142,7 @@
     position: absolute;
     width: 400px;
     height: 400px;
-    background: radial-gradient(circle, rgba(85, 186, 241, 0.5) 0%, rgba(9, 152, 252, 0) 70%);
+    background: radial-gradient(circle at center, rgba(85, 186, 241, 0.5) 0%, rgba(9, 152, 252, 0) 70%);
     border-radius: 50%;
     z-index: 0;
     pointer-events: none;
@@ -225,9 +229,10 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 365px; /* Ограничиваем ширину для центрирования */
+    max-width: 365px;
     box-sizing: border-box;
     margin-top: 1rem;
+    overflow: visible; /* Убираем ограничения */
 }
 
 .energy-container {

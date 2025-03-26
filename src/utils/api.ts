@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { store } from "../store";
 
-const API_URL = "https://fear-worldcat-ev-spent.trycloudflare.com/api";
+const API_URL = "https://stone-volodya-backend.onrender.com/api";
 
 const api = axios.create({ baseURL: API_URL });
 

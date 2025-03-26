@@ -1,10 +1,10 @@
 .bottom-nav {
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
     left: 50%;
     transform: translateX(-50%);
+    width: 100%;
+    max-width: 390px; /* Ограничиваем ширину */
     z-index: 20;
     background: linear-gradient(90deg, #3F3937 0%, #4C4C4C 100%);
     border-radius: 24px 24px 0 0;

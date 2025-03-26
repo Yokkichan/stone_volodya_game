@@ -8,22 +8,21 @@
 }
 
 .app-container {
-  position: fixed; /* Фиксируем контейнер */
+  position: relative;
   top: 0;
   left: 0;
-  height: 100vh; /* Полная высота viewport */
+  min-height: 100vh; /* Меняем height на min-height */
   width: 100vw;
-  overflow: hidden; /* Запрещаем прокрутку внутри контейнера */
   display: flex;
   flex-direction: column;
-  touch-action: pan-x pan-y; /* Разрешаем только нужные жесты */
-  user-select: none; /* Запрещаем выделение внутри контейнера */
-  -webkit-user-select: none; /* Для Safari */
-  -moz-user-select: none; /* Для Firefox */
-  -ms-user-select: none; /* Для Edge */
+  touch-action: pan-x pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  overflow-y: auto; /* Разрешаем прокрутку */
 }
 
-/* Запрещаем выделение для всех дочерних элементов */
 .app-container * {
   user-select: none;
   -webkit-user-select: none;
@@ -51,7 +50,4 @@
   width: 100%;
   height: 100%;
   background-color: rgba(82, 82, 82, 0.58);
-
 }
-
-@tailwind utilities;

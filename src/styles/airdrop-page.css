@@ -1,5 +1,5 @@
 .airdrop-page {
-    position: relative;
+    position: relative; /* Убираем absolute */
     min-height: 100vh;
     width: 100%;
     padding: 0;
@@ -9,12 +9,11 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: auto;
-    padding-bottom: 60px;
+    overflow-y: auto;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom));
     background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
 }
 
-/* Обновляем свечение, чтобы соответствовать BoostsPage */
 .airdrop-page::before {
     content: "";
     position: absolute;
@@ -22,13 +21,12 @@
     left: 50%;
     transform: translateX(-50%);
     width: 100%;
-    height: 400px; /* Устанавливаем такую же высоту, как в BoostsPage */
-    background: radial-gradient(circle at center top, rgba(0, 136, 204, 0.5) 0%, rgba(0, 95, 139, 0) 70%); /* Свечение как в BoostsPage */
+    height: 400px;
+    background: radial-gradient(circle at center top, rgba(0, 136, 204, 0.5) 0%, rgba(0, 95, 139, 0) 70%);
     z-index: 0;
     pointer-events: none;
 }
 
-/* Остальной код остаётся без изменений */
 .content {
     width: 100%;
     max-width: 365px;
@@ -36,6 +34,7 @@
     flex-direction: column;
     align-items: center;
     z-index: 1;
+    padding-bottom: 40px; /* Отступ снизу */
 }
 
 .coin-pig {

@@ -172,19 +172,18 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                 const y = Math.abs(rect.y - clientY);
                 const halfWidth = rect.width / 2;
                 const halfHeight = rect.height / 2;
-                const calcAngleX = (x - halfWidth) / 16; // Как в примере
-                const calcAngleY = ((y - halfHeight) / 14) * -1; // Как в примере
+                const calcAngleX = (x - halfWidth) / 16;
+                const calcAngleY = ((y - halfHeight) / 14) * -1;
 
                 if (Math.floor(calcAngleX) === 0 && Math.floor(calcAngleY) === 0) {
-                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`; // Как в примере
+                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`;
                 } else {
                     coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg)`;
                 }
-                coinHolder.style.perspective = `${halfWidth * 4}px`; // Перспектива для контейнера
-                coin.style.perspective = `${halfWidth * 4}px`; // Перспектива для монеты
+                coinHolder.style.perspective = `${halfWidth * 4}px`;
+                coin.style.perspective = `${halfWidth * 4}px`;
                 WebApp.HapticFeedback.impactOccurred("medium");
 
-                // Возврат в исходное положение через 150 мс
                 setTimeout(() => {
                     coin.style.transform = "rotateY(0deg) rotateX(0deg)";
                 }, 150);
@@ -192,7 +191,7 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
 
             try {
                 const totalStones = stonesPerClick + pendingStones;
-                const updatedData = await updateBalanceAPI(totalStones, true);
+                const updatedData = await updateBalanceAPI(totalStones, false); // Исправлено на false
                 dispatch(setUser(updatedData));
                 setLastSyncTime(Date.now());
                 setPendingStones(0);
@@ -203,6 +202,7 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
         },
         [energy, stonesPerClick, pendingStones, dispatch, socket, telegramId, username]
     );
+
     const handleCollectEnd = useCallback(() => {
         const coin = coinRef.current;
         if (coin) {

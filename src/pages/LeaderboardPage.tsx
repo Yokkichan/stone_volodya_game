@@ -18,13 +18,16 @@ interface Player {
 const LeaderboardPage: React.FC = () => {
     const { user } = useSelector((state: RootState) => state.user);
     const [players, setPlayers] = useState<Player[]>([]);
-    const [selectedLeagueIndex, setSelectedLeagueIndex] = useState(0);
+    const [selectedLeagueIndex, setSelectedLeagueIndex] = useState(0); // По умолчанию первая лига
     const [isFetching, setIsFetching] = useState(false);
 
     useEffect(() => {
+        // Устанавливаем лигу пользователя только после полной загрузки
         if (user?.league) {
             const index = leagueData.findIndex((l) => l.name === user.league);
-            if (index !== -1) setSelectedLeagueIndex(index);
+            if (index !== -1 && index !== selectedLeagueIndex) {
+                setSelectedLeagueIndex(index);
+            }
         }
     }, [user?.league]);
 
@@ -33,6 +36,7 @@ const LeaderboardPage: React.FC = () => {
             setIsFetching(true);
             try {
                 const data = await getLeaderboard(leagueData[selectedLeagueIndex].name as LeagueName);
+                console.log(`Leaderboard for ${leagueData[selectedLeagueIndex].name}:`, data); // Логи для отладки
                 setPlayers(data.slice(0, 100));
             } catch (error) {
                 console.error("[Leaderboard] Fetch error:", error);

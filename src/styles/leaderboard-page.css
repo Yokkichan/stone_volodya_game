@@ -1,6 +1,6 @@
 .leaderboard-page {
-    position: relative;
-    min-height: 100vh;
+    position: relative; /* Убираем absolute */
+    min-height: 100vh; /* Меняем на min-height */
     width: 100%;
     padding: 1rem 0;
     margin: 0;
@@ -9,7 +9,7 @@
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    padding-bottom: 60px;
+    padding-bottom: calc(80px + env(safe-area-inset-bottom)); /* Учитываем нижнее меню */
     background: #1a1a1a;
     z-index: 0;
     isolation: isolate;
@@ -37,6 +37,8 @@
     align-items: center;
     position: relative;
     z-index: 1;
+    padding-bottom: 40px; /* Отступ снизу */
+    box-sizing: border-box;
 }
 
 /* Контейнер для звёзд */

@@ -18,23 +18,22 @@ body {
   min-height: 100vh;
   width: 100vw;
   max-width: 100%;
-  overflow: hidden; /* Запрещаем прокрутку body */
   box-sizing: border-box;
+  /* Удаляем overflow: hidden */
 }
 
-/* Ограничение ширины для браузера */
 body:not(.telegram-web-app) {
-  max-width: 390px; /* Типичная ширина мобильного устройства */
-  margin: 0 auto; /* Центрируем */
+  max-width: 390px;
+  margin: 0 auto;
 }
 
 body.telegram-web-app {
-  user-select: none; /* Запрещаем выделение на уровне body */
+  user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
-  height: 100vh; /* Фиксируем высоту под Telegram */
-  overflow: hidden; /* Убираем прокрутку */
+  height: 100vh;
+  /* Удаляем overflow: hidden */
 }
 
 body.telegram-web-app button {

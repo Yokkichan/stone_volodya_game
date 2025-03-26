@@ -4,21 +4,22 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5); /* Полупрозрачный фон */
+    background: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 9999;
 }
 
 .modal-content {
-    background: linear-gradient(90deg, #8C522B 0%, #D49163 100%); /* Градиент как на скриншоте */
+    background: #2F2F2F;
     border-radius: 16px;
     padding: 20px;
     width: 90%;
     max-width: 300px;
     text-align: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    z-index: 10000;
 }
 
 .modal-icon {
@@ -27,10 +28,11 @@
     margin: 0 auto 10px;
     display: block;
     object-fit: contain;
+    border-radius: 20px; /* Закругляем углы на 20px */
 }
 
 .modal-title {
-    color: #f0f0f0; /* Белый текст */
+    color: #f0f0f0;
     font-size: 24px;
     font-family: "Roboto", sans-serif;
     font-weight: 500;
@@ -38,7 +40,7 @@
 }
 
 .modal-description {
-    color: #b0b0b0; /* Серый текст */
+    color: #b0b0b0;
     font-size: 14px;
     font-family: "Roboto", sans-serif;
     margin: 0 0 12px;
@@ -60,17 +62,21 @@
 }
 
 .modal-cost-icon {
-    font-size: 16px;
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 20px; /* Закругляем углы на 20px */
 }
 
 .modal-cost-text {
     color: #f0f0f0;
     font-size: 16px;
     font-family: "Roboto", sans-serif;
+    font-weight: bold;
 }
 
 .modal-confirm-button {
-    background: #F5A623; /* Оранжевый цвет кнопки */
+    background: linear-gradient(90deg, #50B8F1 0%, #0596FD 100%);
     color: #fff;
     font-size: 16px;
     font-family: "Roboto", sans-serif;
@@ -80,8 +86,16 @@
     padding: 12px;
     width: 100%;
     cursor: pointer;
+    text-transform: uppercase;
 }
 
 .modal-confirm-button:hover {
-    background: #e69520; /* Чуть темнее при наведении */
+    background: linear-gradient(90deg, #40A8E1 0%, #0486ED 100%);
+}
+
+.modal-cost-icon {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    border-radius: 20px; /* Закругленные углы, как было указано ранее */
 }

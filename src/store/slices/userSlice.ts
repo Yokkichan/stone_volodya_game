@@ -20,6 +20,9 @@ export interface UserState {
     airdropStones?: number;
     referralBonus?: number;
     airdropProgress: number;
+    refillLastUsed?: string;      // Добавляем для Refill
+    boostLastUsed?: string;       // Добавляем для Boost
+    boostActiveUntil?: string;    // Добавляем для Boost
 }
 
 const initialState: { user: UserState | null } = {
@@ -32,7 +35,6 @@ const userSlice = createSlice({
     reducers: {
         setUser: (state, action: PayloadAction<Partial<UserState>>) => {
             const payload = action.payload;
-            console.log("[userSlice] setUser payload:", payload); // Лог входных данных
             if (!payload.telegramId) {
                 console.log("[userSlice] setUser: telegramId missing, skipping update");
                 return;
@@ -54,11 +56,13 @@ const userSlice = createSlice({
                 autoStonesPerSecond: payload.autoStonesPerSecond ?? 0,
                 maxEnergy: payload.maxEnergy ?? 1000,
                 isPremium: payload.isPremium ?? false,
-                airdropProgress: payload.airdropProgress ?? (state.user?.airdropProgress ?? 0), // Сохраняем старое значение, если новое не пришло
+                airdropProgress: payload.airdropProgress ?? (state.user?.airdropProgress ?? 0),
+                refillLastUsed: payload.refillLastUsed ?? state.user?.refillLastUsed,
+                boostLastUsed: payload.boostLastUsed ?? state.user?.boostLastUsed,
+                boostActiveUntil: payload.boostActiveUntil ?? state.user?.boostActiveUntil,
             } as UserState;
 
             state.user = updatedUser;
-            console.log("[userSlice] Updated user state:", updatedUser); // Лог результата
         },
         clearUser: (state) => {
             state.user = null;

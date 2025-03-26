@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { getLeaderboard } from "../utils/api";
-import { leagueData, LeagueName } from "../utils/leagues"; // Импортируем leagueData
+import { leagueData, LeagueName } from "../utils/leagues";
 import telegramplus from "../assets/frens/telegramplus.png";
 import friendIcon from "../assets/frens/telegram.png";
+import stoneImage from "../assets/stone.png";
 
 interface Player {
     telegramId: string;
@@ -79,18 +80,20 @@ const LeaderboardPage: React.FC = () => {
                     ) : players.length > 0 ? (
                         players.map((player, index) => (
                             <div key={player.telegramId} className="leader-item">
-                                <span className="leader-rank">{index + 1}</span>
                                 <img
                                     src={player.photo_url || (player.isPremium ? telegramplus : friendIcon)}
                                     alt={player.username}
                                     className="leader-avatar"
                                     onError={(e) => { e.currentTarget.src = player.isPremium ? telegramplus : friendIcon; }}
                                 />
-                                <span className="leader-name">{player.username}</span>
-                                <div className="leader-score">
-                                    <span className="leader-reward-icon">🪨</span>
-                                    <span className="leader-text-xs">{player.stones.toLocaleString()}</span>
+                                <div className="leader-info">
+                                    <span className="leader-name">{player.username}</span>
+                                    <div className="leader-score">
+                                        <img src={stoneImage} alt="Stone" className="leader-reward-icon" />
+                                        <span className="leader-text-xs">{player.stones.toLocaleString()}</span>
+                                    </div>
                                 </div>
+                                <span className="leader-rank">{index + 1}</span>
                             </div>
                         ))
                     ) : (

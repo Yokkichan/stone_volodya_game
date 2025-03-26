@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/confirm-modal.css";
+import stoneImage from "../assets/stone.png"; // Добавляем импорт иконки
 
 interface ConfirmModalProps {
     isOpen: boolean;
@@ -38,7 +39,7 @@ const ConfirmModal: React.FC<ConfirmModalProps> = ({
                 <p className="modal-description">{description}</p>
                 {bonus && <p className="modal-bonus">{bonus}</p>}
                 <div className="modal-cost">
-                    <span className="modal-cost-icon">🪨</span>
+                    <img src={stoneImage} alt="Stone" className="modal-cost-icon" /> {/* Заменяем эмодзи на иконку */}
                     <span className="modal-cost-text">
                         {cost.toLocaleString()}
                         {itemType === "boost" && level !== undefined ? ` • Level ${level}` : ""}

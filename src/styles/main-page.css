@@ -1,12 +1,47 @@
+.dashboard {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    background-image: url("src/assets/background1.png");
+    background-size: cover;
+}
+
+.dashboard::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #303030E5;
+    backdrop-filter: blur(8px);
+    z-index: 0;
+    pointer-events: none;
+}
+
+.relative {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .top-section {
     display: flex;
     align-items: center;
     justify-content: center;
     width: 100%;
+    max-width: 365px; /* Ограничиваем ширину для центрирования */
     padding: 0.5rem 1rem;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Центрируем по горизонтали */
     z-index: 50;
     height: 50px;
 }
@@ -36,15 +71,24 @@
     justify-content: center;
     gap: 6px;
     border-radius: 16px;
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    background: #3E3835;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     font-size: 16px;
     font-weight: 600;
     color: white;
     height: 36px;
-    min-width: 100px;
+    padding: 0 12px;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
+.stone-icon {
+    width: 18px; /* Размер изображения, можно настроить */
+    height: 18px;
+    object-fit: contain; /* Сохраняет пропорции изображения */
+}
 .score-holder.stones span {
     font-size: 18px;
 }
@@ -60,8 +104,10 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+    max-width: 365px; /* Ограничиваем ширину для центрирования */
     height: 300px;
-    margin-bottom: 2rem;
+    margin: 60px auto 2rem; /* Отступ сверху для .top-section */
     position: relative;
 }
 
@@ -83,6 +129,19 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.coin-holder::before {
+    content: "";
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(85, 186, 241, 0.5) 0%, rgba(9, 152, 252, 0) 70%);
+    border-radius: 50%;
+    z-index: 0;
+    pointer-events: none;
 }
 
 .coin-image-main {
@@ -90,8 +149,11 @@
     height: 300px;
     display: block;
     background: transparent;
-    transition: transform 0.1s ease-in-out; /* Ускорили переход */
+    transition: transform 0.2s ease-in-out; /* Плавность как в примере */
+    position: relative;
+    z-index: 1;
 }
+
 
 .stone-effect {
     position: absolute;
@@ -101,8 +163,9 @@
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
     pointer-events: none;
     animation: fly 0.8s ease-out forwards;
-    --translate-x: 0px;  /* Default value */
-    --translate-y: -50px;  /* Default value */
+    z-index: 2; /* Эффект кликов поверх монеты */
+    --translate-x: 0px;
+    --translate-y: -50px;
 }
 
 @keyframes fly {
@@ -124,6 +187,7 @@
     height: 100%;
     pointer-events: none;
     overflow: hidden;
+    z-index: 2; /* Дождь камней поверх монеты */
 }
 
 .falling-stone {
@@ -131,6 +195,7 @@
     font-size: 20px;
     animation: fall 2s linear infinite;
     opacity: 0.8;
+    z-index: 2; /* Камни поверх монеты */
 }
 
 .falling-stone:nth-child(1) { left: 10%; animation-delay: 0s; }
@@ -160,7 +225,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 365px;
+    max-width: 365px; /* Ограничиваем ширину для центрирования */
     box-sizing: border-box;
     margin-top: 1rem;
 }
@@ -178,7 +243,7 @@
 .energy-bar {
     position: relative;
     width: 100%;
-    height: 6px;
+    height: 8px;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 4px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
@@ -188,26 +253,27 @@
     position: relative;
     display: block;
     height: 100%;
-    background: linear-gradient(88.09deg, #D49163 0%, #8C522B 96.78%);
+    background: linear-gradient(88.09deg, #55BAF1 0%, #0998FC 96.78%);
     border-radius: 4px;
     transition: width 0.2s ease-in;
 }
 
 .energy-bar-slider::after {
-    content: "⚡";
+    content: "";
     position: absolute;
     right: -10px;
     top: 50%;
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    background: linear-gradient(88.09deg, #D49163 0%, #8C522B 96.78%);
+    background-image: url('../assets/lightning.png'), linear-gradient(88.09deg, #55BAF1 0%, #0998FC 96.78%);
+    background-repeat: no-repeat, no-repeat;
+    background-position: center center, center center;
+    background-size: 12px 12px, cover;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
-    color: white;
     box-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
 }
 
@@ -217,7 +283,7 @@
 }
 
 .rating-button {
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    background: #3E3835;
     border-radius: 30px;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     width: 85%;
@@ -242,7 +308,7 @@
 
 .rating-button:active {
     transform: scale(0.95);
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    background: #3E3835;
 }
 
 .rating-left {

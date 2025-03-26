@@ -1,8 +1,8 @@
 .leaderboard-page {
     position: relative;
-    height: 100vh;
+    min-height: 100vh;
     width: 100%;
-    padding: 0;
+    padding: 1rem 0;
     margin: 0;
     font-family: "Roboto", sans-serif;
     display: flex;
@@ -10,16 +10,23 @@
     align-items: center;
     overflow-y: auto;
     padding-bottom: 60px;
-    padding-top: 1rem;
     background: #1a1a1a;
-    background-image: linear-gradient(
-            to bottom,
-            rgba(255, 255, 255, 0.3) 0%,
-            rgba(255, 255, 255, 0.1) 50%,
-            rgba(255, 255, 255, 0) 70%
-    );
-    background-size: 100% 400px;
-    background-repeat: no-repeat;
+    z-index: 0;
+    isolation: isolate;
+    box-sizing: border-box;
+}
+
+.leaderboard-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 400px;
+    background: radial-gradient(circle at center top, rgba(0, 136, 204, 0.5) 0%, rgba(0, 95, 139, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
 }
 
 .leaderboard-content {
@@ -29,12 +36,14 @@
     flex-direction: column;
     align-items: center;
     position: relative;
+    z-index: 1;
 }
 
 /* Контейнер для звёзд */
 .stars-container {
     position: relative;
-    width: 200px;
+    width: 100%;
+    max-width: 365px;
     height: 200px;
     overflow: hidden;
 }
@@ -47,20 +56,74 @@
     width: 1px;
     height: 1px;
     background: transparent;
-    box-shadow: 50px 30px rgba(255, 255, 255, 0.6), 120px 80px rgba(255, 255, 255, 0.6),
-    80px 150px rgba(255, 255, 255, 0.6);
-    animation: animStar 50s linear infinite;
+    box-shadow:
+            20px 30px rgba(255, 255, 255, 0.6),
+            40px 50px rgba(255, 255, 255, 0.5),
+            60px 70px rgba(255, 255, 255, 0.4),
+            80px 20px rgba(255, 255, 255, 0.6),
+            100px 90px rgba(255, 255, 255, 0.5),
+            120px 40px rgba(255, 255, 255, 0.4),
+            140px 60px rgba(255, 255, 255, 0.6),
+            160px 80px rgba(255, 255, 255, 0.5),
+            180px 30px rgba(255, 255, 255, 0.4),
+            200px 50px rgba(255, 255, 255, 0.6),
+            220px 70px rgba(255, 255, 255, 0.5),
+            240px 20px rgba(255, 255, 255, 0.4),
+            260px 90px rgba(255, 255, 255, 0.5),
+            280px 40px rgba(255, 255, 255, 0.4),
+            300px 60px rgba(255, 255, 255, 0.6),
+            320px 80px rgba(255, 255, 255, 0.5),
+            340px 30px rgba(255, 255, 255, 0.4),
+                /* Добавляем больше звёзд ниже */
+            30px 110px rgba(255, 255, 255, 0.6),
+            50px 130px rgba(255, 255, 255, 0.5),
+            70px 150px rgba(255, 255, 255, 0.4),
+            90px 120px rgba(255, 255, 255, 0.6),
+            110px 140px rgba(255, 255, 255, 0.5),
+            130px 160px rgba(255, 255, 255, 0.4),
+            150px 180px rgba(255, 255, 255, 0.6),
+            170px 110px rgba(255, 255, 255, 0.5),
+            190px 130px rgba(255, 255, 255, 0.4),
+            210px 150px rgba(255, 255, 255, 0.6);
+    animation: animStar 20s linear infinite alternate;
+    z-index: 1;
 }
 
 #stars:after {
     content: " ";
     position: absolute;
-    left: 200px;
+    left: 365px;
     width: 1px;
     height: 1px;
     background: transparent;
-    box-shadow: 50px 30px rgba(255, 255, 255, 0.6), 120px 80px rgba(255, 255, 255, 0.6),
-    80px 150px rgba(255, 255, 255, 0.6);
+    box-shadow:
+            20px 30px rgba(255, 255, 255, 0.6),
+            40px 50px rgba(255, 255, 255, 0.5),
+            60px 70px rgba(255, 255, 255, 0.4),
+            80px 20px rgba(255, 255, 255, 0.6),
+            100px 90px rgba(255, 255, 255, 0.5),
+            120px 40px rgba(255, 255, 255, 0.4),
+            140px 60px rgba(255, 255, 255, 0.6),
+            160px 80px rgba(255, 255, 255, 0.5),
+            180px 30px rgba(255, 255, 255, 0.4),
+            200px 50px rgba(255, 255, 255, 0.6),
+            220px 70px rgba(255, 255, 255, 0.5),
+            240px 20px rgba(255, 255, 255, 0.4),
+            260px 90px rgba(255, 255, 255, 0.5),
+            280px 40px rgba(255, 255, 255, 0.4),
+            300px 60px rgba(255, 255, 255, 0.6),
+            320px 80px rgba(255, 255, 255, 0.5),
+            340px 30px rgba(255, 255, 255, 0.4),
+            30px 110px rgba(255, 255, 255, 0.6),
+            50px 130px rgba(255, 255, 255, 0.5),
+            70px 150px rgba(255, 255, 255, 0.4),
+            90px 120px rgba(255, 255, 255, 0.6),
+            110px 140px rgba(255, 255, 255, 0.5),
+            130px 160px rgba(255, 255, 255, 0.4),
+            150px 180px rgba(255, 255, 255, 0.6),
+            170px 110px rgba(255, 255, 255, 0.5),
+            190px 130px rgba(255, 255, 255, 0.4),
+            210px 150px rgba(255, 255, 255, 0.6);
 }
 
 #stars2 {
@@ -70,18 +133,69 @@
     width: 2px;
     height: 2px;
     background: transparent;
-    box-shadow: 70px 40px rgba(255, 255, 255, 0.5), 130px 90px rgba(255, 255, 255, 0.5);
-    animation: animStar 100s linear infinite;
+    box-shadow:
+            30px 40px rgba(255, 255, 255, 0.5),
+            50px 60px rgba(255, 255, 255, 0.4),
+            70px 20px rgba(255, 255, 255, 0.6),
+            90px 80px rgba(255, 255, 255, 0.5),
+            110px 30px rgba(255, 255, 255, 0.4),
+            130px 50px rgba(255, 255, 255, 0.6),
+            150px 70px rgba(255, 255, 255, 0.5),
+            170px 40px rgba(255, 255, 255, 0.4),
+            190px 60px rgba(255, 255, 255, 0.6),
+            210px 80px rgba(255, 255, 255, 0.5),
+            230px 20px rgba(255, 255, 255, 0.4),
+            250px 90px rgba(255, 255, 255, 0.5),
+            270px 30px rgba(255, 255, 255, 0.4),
+            290px 50px rgba(255, 255, 255, 0.6),
+            310px 70px rgba(255, 255, 255, 0.5),
+            330px 40px rgba(255, 255, 255, 0.4),
+                /* Добавляем больше звёзд ниже */
+            40px 100px rgba(255, 255, 255, 0.6),
+            60px 120px rgba(255, 255, 255, 0.5),
+            80px 140px rgba(255, 255, 255, 0.4),
+            100px 160px rgba(255, 255, 255, 0.6),
+            120px 180px rgba(255, 255, 255, 0.5),
+            140px 110px rgba(255, 255, 255, 0.4),
+            160px 130px rgba(255, 255, 255, 0.6),
+            180px 150px rgba(255, 255, 255, 0.5),
+            200px 170px rgba(255, 255, 255, 0.4),
+            220px 120px rgba(255, 255, 255, 0.6);
+    animation: animStar 25s linear infinite alternate;
+    z-index: 1;
 }
 
 #stars2:after {
     content: " ";
     position: absolute;
-    left: 200px;
+    left: 365px;
     width: 2px;
     height: 2px;
     background: transparent;
-    box-shadow: 70px 40px rgba(255, 255, 255, 0.5), 130px 90px rgba(255, 255, 255, 0.5);
+    box-shadow:
+            30px 40px rgba(255, 255, 255, 0.5),
+            50px 60px rgba(255, 255, 255, 0.4),
+            70px 20px rgba(255, 255, 255, 0.6),
+            90px 80px rgba(255, 255, 255, 0.5),
+            110px 30px rgba(255, 255, 255, 0.4),
+            130px 50px rgba(255, 255, 255, 0.6),
+            150px 70px rgba(255, 255, 255, 0.5),
+            170px 40px rgba(255, 255, 255, 0.4),
+            190px 60px rgba(255, 250, 90, 0.5),
+            270px 30px rgba(255, 255, 255, 0.4),
+            290px 50px rgba(255, 255, 255, 0.6),
+            310px 70px rgba(255, 255, 255, 0.5),
+            330px 40px rgba(255, 255, 255, 0.4),
+            40px 100px rgba(255, 255, 255, 0.6),
+            60px 120px rgba(255, 255, 255, 0.5),
+            80px 140px rgba(255, 255, 255, 0.4),
+            100px 160px rgba(255, 255, 255, 0.6),
+            120px 180px rgba(255, 255, 255, 0.5),
+            140px 110px rgba(255, 255, 255, 0.4),
+            160px 130px rgba(255, 255, 255, 0.6),
+            180px 150px rgba(255, 255, 255, 0.5),
+            200px 170px rgba(255, 255, 255, 0.4),
+            220px 120px rgba(255, 255, 255, 0.6);
 }
 
 #stars3 {
@@ -91,32 +205,87 @@
     width: 3px;
     height: 3px;
     background: transparent;
-    box-shadow: 60px 20px rgba(255, 255, 255, 0.4);
-    animation: animStar 150s linear infinite;
+    box-shadow:
+            10px 20px rgba(255, 255, 255, 0.4),
+            40px 70px rgba(255, 255, 255, 0.6),
+            60px 30px rgba(255, 255, 255, 0.5),
+            80px 50px rgba(255, 255, 255, 0.4),
+            100px 80px rgba(255, 255, 255, 0.6),
+            120px 20px rgba(255, 255, 255, 0.5),
+            140px 40px rgba(255, 255, 255, 0.4),
+            160px 60px rgba(255, 255, 255, 0.6),
+            180px 90px rgba(255, 255, 255, 0.5),
+            200px 30px rgba(255, 255, 255, 0.4),
+            220px 50px rgba(255, 255, 255, 0.6),
+            240px 70px rgba(255, 255, 255, 0.5),
+            260px 20px rgba(255, 255, 255, 0.4),
+            280px 80px rgba(255, 255, 255, 0.6),
+            300px 40px rgba(255, 255, 255, 0.5),
+            320px 60px rgba(255, 255, 255, 0.4),
+                /* Добавляем больше звёзд ниже */
+            20px 100px rgba(255, 255, 255, 0.6),
+            50px 120px rgba(255, 255, 255, 0.5),
+            70px 140px rgba(255, 255, 255, 0.4),
+            90px 160px rgba(255, 255, 255, 0.6),
+            110px 180px rgba(255, 255, 255, 0.5),
+            130px 110px rgba(255, 255, 255, 0.4),
+            150px 130px rgba(255, 255, 255, 0.6),
+            170px 150px rgba(255, 255, 255, 0.5),
+            190px 170px rgba(255, 255, 255, 0.4),
+            210px 120px rgba(255, 255, 255, 0.6);
+    animation: animStar 30s linear infinite alternate;
+    z-index: 1;
 }
 
 #stars3:after {
     content: " ";
     position: absolute;
-    left: 200px;
+    left: 365px;
     width: 3px;
     height: 3px;
     background: transparent;
-    box-shadow: 60px 20px rgba(255, 255, 255, 0.4);
+    box-shadow:
+            10px 20px rgba(255, 255, 255, 0.4),
+            40px 70px rgba(255, 255, 255, 0.6),
+            60px 30px rgba(255, 255, 255, 0.5),
+            80px 50px rgba(255, 255, 255, 0.4),
+            100px 80px rgba(255, 255, 255, 0.6),
+            120px 20px rgba(255, 255, 255, 0.5),
+            140px 40px rgba(255, 255, 255, 0.4),
+            160px 60px rgba(255, 255, 255, 0.6),
+            180px 90px rgba(255, 255, 255, 0.5),
+            200px 30px rgba(255, 255, 255, 0.4),
+            220px 50px rgba(255, 255, 255, 0.6),
+            240px 70px rgba(255, 255, 255, 0.5),
+            260px 20px rgba(255, 255, 255, 0.4),
+            280px 80px rgba(255, 255, 255, 0.6),
+            300px 40px rgba(255, 255, 255, 0.5),
+            320px 60px rgba(255, 255, 255, 0.4),
+            20px 100px rgba(255, 255, 255, 0.6),
+            50px 120px rgba(255, 255, 255, 0.5),
+            70px 140px rgba(255, 255, 255, 0.4),
+            90px 160px rgba(255, 255, 255, 0.6),
+            110px 180px rgba(255, 255, 255, 0.5),
+            130px 110px rgba(255, 255, 255, 0.4),
+            150px 130px rgba(255, 255, 255, 0.6),
+            170px 150px rgba(255, 255, 255, 0.5),
+            190px 170px rgba(255, 255, 255, 0.4),
+            210px 120px rgba(255, 255, 255, 0.6);
 }
 
 @keyframes animStar {
-    from {
+    0% {
         transform: translateX(0px);
     }
-    to {
-        transform: translateX(-200px);
+    100% {
+        transform: translateX(-365px);
     }
 }
 
 .league-switcher {
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* Убедимся, что стрелки и контент распределяются равномерно */
+    align-items: center; /* Выравниваем по вертикали */
     width: 100%;
     margin-bottom: 1rem;
     position: relative;
@@ -129,7 +298,9 @@
     padding: 10px;
     display: flex;
     justify-content: center;
-    margin-top: 80px; /* Отступ сверху для выравнивания стрелок */
+    align-items: center; /* Центрируем стрелку по вертикали */
+    margin-top: 0; /* Убираем отступ сверху, чтобы стрелки были на одном уровне с контентом */
+    flex: 0 0 auto; /* Стрелки не растягиваются */
 }
 
 .arrow-button:disabled {
@@ -146,7 +317,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center; /* Центрируем контент по вертикали */
     flex: 1;
+    text-align: center; /* Убедимся, что текст центрируется */
 }
 
 .league-icon {
@@ -154,6 +327,8 @@
     height: 200px;
     object-fit: contain;
     margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
 }
 
 .league-title {
@@ -208,9 +383,6 @@
 }
 
 .leaderboard-card {
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
-    border-radius: 16px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     width: 100%;
     max-width: 365px;
     padding: 0.75rem;
@@ -220,7 +392,11 @@
     display: flex;
     align-items: center;
     padding: 8px 12px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 10px;
+    background: linear-gradient(90deg, #3F3937 0%, #4C4C4C 100%);
+    border: 1px solid #797979;
+    border-radius: 16px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
 }
 
 .leader-rank {
@@ -238,7 +414,12 @@
     border-radius: 50%;
     background-color: #d9d9d9;
     margin-right: 16px;
-    border: 2px solid #fff;
+}
+
+.leader-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .leader-name {
@@ -246,7 +427,6 @@
     font-size: 16px;
     font-family: "Roboto", sans-serif;
     font-weight: 500;
-    flex: 1;
 }
 
 .leader-score {
@@ -256,7 +436,9 @@
 }
 
 .leader-reward-icon {
-    font-size: 12px;
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
 }
 
 .leader-text-xs {

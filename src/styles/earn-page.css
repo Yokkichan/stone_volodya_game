@@ -1,17 +1,35 @@
-/* src/pages/EarnPage.css */
 .earn-page {
-    position: relative;
-    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    padding: 0;
+    min-height: 100%;
+    padding: 1rem 0;
     margin: 0;
     font-family: "Roboto", sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     overflow-y: auto;
-    padding-bottom: 60px;
-    padding-top: 1rem;
+    -webkit-overflow-scrolling: touch;
+    background: #1a1a1a;
+    z-index: 0;
+    isolation: isolate;
+    box-sizing: border-box;
+    padding-bottom: 80px; /* Увеличиваем отступ снизу для нижнего меню */
+}
+
+.earn-page::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 400px;
+    background: radial-gradient(circle at center top, rgba(0, 136, 204, 0.5) 0%, rgba(0, 95, 139, 0) 70%);
+    z-index: -1;
+    pointer-events: none;
 }
 
 .earn-content {
@@ -21,67 +39,93 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 100%;
+    position: relative;
+    z-index: 1;
+    padding-bottom: 20px; /* Дополнительный отступ снизу для контента */
+    box-sizing: border-box;
 }
 
 .earn-coin-image {
-    width: 150px;
-    height: 150px;
+    width: 170px; /* Уменьшаем размер логотипа (было 150px) */
+    height: 170px;
     border-radius: 50%;
-    margin: 20px auto;
+    margin: 15px auto; /* Уменьшаем отступ (было 20px) */
     object-fit: contain;
 }
 
 .earn-title {
     color: #f0f0f0;
-    font-size: 32px;
+    font-size: 24px; /* Уменьшаем шрифт (было 28px) */
     font-family: "Roboto", sans-serif;
     font-weight: bold;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.75rem; /* Уменьшаем отступ (было 1rem) */
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.user-league {
+    color: #f0f0f0;
+    font-size: 14px; /* Уменьшаем шрифт (было 16px) */
+    font-family: "Roboto", sans-serif;
+    text-align: center;
+    margin-bottom: 0.75rem; /* Уменьшаем отступ (было 1rem) */
 }
 
 .earn-section-title {
     color: #f0f0f0;
-    font-size: 20px;
+    font-size: 14px; /* Уменьшаем шрифт (было 16px) */
     font-family: "Roboto", sans-serif;
     font-weight: 500;
-    margin: 20px 0 10px;
+    margin: 15px 0 8px; /* Уменьшаем отступы (было 20px 0 10px) */
     text-align: center;
     width: 100%;
+    text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .earn-card {
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    background: linear-gradient(90deg, #3F3937 0%, #4C4C4C 100%);
+    border: 1px solid #797979;
     border-radius: 16px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
     width: 100%;
-    max-width: 340px;
-    margin-bottom: 1rem;
-    padding: 0.5rem;
+    max-width: 365px;
+    margin-bottom: 1rem; /* Уменьшаем отступ (было 1.5rem) */
+    padding: 0.5rem; /* Уменьшаем внутренний отступ (было 0.75rem) */
 }
 
 .earn-task-item {
     display: flex;
     align-items: center;
-    padding: 10px 12px;
-    cursor: pointer;
+    padding: 8px 10px; /* Уменьшаем внутренний отступ (было 10px 12px) */
+    justify-content: space-between;
 }
 
 .earn-task-item.completed {
     opacity: 0.6;
-    cursor: default;
 }
 
 .earn-task-item.loading {
     opacity: 0.8;
 }
 
+.earn-task-link {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    cursor: pointer;
+}
+
+.earn-task-item.completed .earn-task-link {
+    cursor: default;
+}
+
 .earn-task-icon {
-    width: 42px;
-    height: 39px;
-    border-radius: 9px;
+    width: 36px; /* Уменьшаем размер иконки (было 42px) */
+    height: 36px; /* Уменьшаем размер (было 39px) */
+    border-radius: 8px; /* Уменьшаем радиус (было 9px) */
     background-color: #d9d9d9;
-    margin-right: 16px;
+    margin-right: 12px; /* Уменьшаем отступ (было 16px) */
 }
 
 .earn-task-details {
@@ -92,7 +136,7 @@
 
 .earn-task-text {
     color: #f0f0f0;
-    font-size: 16px;
+    font-size: 14px; /* Уменьшаем шрифт (было 16px) */
     font-family: "Roboto", sans-serif;
     font-weight: 500;
 }
@@ -101,36 +145,38 @@
     display: flex;
     align-items: center;
     gap: 4px;
-    margin-top: 4px;
+    margin-top: 2px; /* Уменьшаем отступ (было 4px) */
 }
 
 .earn-reward-icon {
-    font-size: 12px;
+    width: 16px; /* Уменьшаем размер иконки (было 18px) */
+    height: 16px;
+    object-fit: contain;
 }
 
 .earn-text-xs {
     color: #b0b0b0;
-    font-size: 10px;
+    font-size: 9px; /* Уменьшаем шрифт (было 10px) */
     font-family: "Roboto", sans-serif;
 }
 
 .earn-task-status.completed {
     color: #4caf50;
-    font-size: 12px;
+    font-size: 11px; /* Уменьшаем шрифт (было 12px) */
     font-family: "Roboto", sans-serif;
 }
 
 .earn-task-button.confirm {
-    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%); /* Золотой градиент в стиле проекта */
+    background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: 5px 10px; /* Уменьшаем отступы (было 6px 12px) */
+    font-size: 11px; /* Уменьшаем шрифт (было 12px) */
     font-family: "Roboto", sans-serif;
     font-weight: 500;
     cursor: pointer;
-    margin-left: 8px;
+    margin-left: 6px; /* Уменьшаем отступ (было 8px) */
     box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -142,7 +188,7 @@
 
 .earn-error {
     color: #ff4444;
-    font-size: 14px;
-    margin-top: 10px;
+    font-size: 12px; /* Уменьшаем шрифт (было 14px) */
+    margin-top: 8px; /* Уменьшаем отступ (было 10px) */
     text-align: center;
 }

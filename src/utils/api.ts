@@ -1,7 +1,7 @@
 import axios, { AxiosError } from "axios";
 import { store } from "../store";
 
-const API_URL = "https://bishop-restoration-come-dayton.trycloudflare.com/api";
+const API_URL = "https://fear-worldcat-ev-spent.trycloudflare.com/api";
 
 const api = axios.create({ baseURL: API_URL });
 
@@ -18,7 +18,6 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
-// Общая функция для обработки ошибок
 const handleApiError = (error: unknown, message: string) => {
     console.error(`[api.ts] ${message}:`, error);
     throw error instanceof AxiosError ? error.response?.data || error.message : error;
@@ -47,7 +46,6 @@ export const getProfile = async () => {
 export const updateBalance = async (stones: number, useEnergy: boolean = true) => {
     try {
         const response = await api.post("/game/update-balance", { stones, useEnergy });
-        console.log(`[api.ts] updateBalance response:`, response.data);
         return response.data;
     } catch (error) {
         handleApiError(error, "Error in updateBalance");
@@ -60,6 +58,24 @@ export const applyBoost = async (boostName: string) => {
         return response.data;
     } catch (error) {
         handleApiError(error, "Error in applyBoost");
+    }
+};
+
+export const useRefill = async () => {
+    try {
+        const response = await api.post("/game/use-refill");
+        return response.data;
+    } catch (error) {
+        handleApiError(error, "Error in useRefill");
+    }
+};
+
+export const useBoost = async () => {
+    try {
+        const response = await api.post("/game/use-boost");
+        return response.data;
+    } catch (error) {
+        handleApiError(error, "Error in useBoost");
     }
 };
 
@@ -110,17 +126,14 @@ export const claimAirdrop = async () => {
 
 export const addAirdropProgress = async (stonesToAdd: number) => {
     try {
-        console.log("[api.ts] Sending addAirdropProgress request with stonesToAdd:", stonesToAdd);
         const response = await api.post("/airdrop/add-progress", { stonesToAdd });
-        console.log("[api.ts] addAirdropProgress response:", response.data);
         return response.data;
     } catch (error) {
-        console.error("[api.ts] Error in addAirdropProgress:", error);
-        throw error;
+        handleApiError(error, "Error in addAirdropProgress");
     }
 };
 
-export const completeTask = async (taskName: string) => { // Убираем telegramId, он добавится через интерцептор
+export const completeTask = async (taskName: string) => {
     try {
         const response = await api.post("/earn/completeTask", { taskName });
         return response.data;

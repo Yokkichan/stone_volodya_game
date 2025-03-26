@@ -1,4 +1,3 @@
-// src/pages/FriendsPage.tsx
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -7,6 +6,7 @@ import { generateInviteLink, openInviteLink } from "../utils/referral";
 import coinImage from "../assets/frens/icon_coin.png";
 import telegramplus from "../assets/frens/telegramplus.png";
 import friendIcon from "../assets/frens/telegram.png";
+import stoneImage from "../assets/stone.png";
 import { getReferalFriends } from "../utils/api.ts";
 
 interface Friend {
@@ -27,7 +27,7 @@ const FriendsPage = () => {
     const user = useSelector((state: RootState) => state.user.user);
     const telegramId = user?.telegramId || "";
     const referralCode = user?.referralCode || "";
-    const referralBonusFromRedux = user?.referralBonus || 0; // Для сравнения
+    const referralBonusFromRedux = user?.referralBonus || 0;
     const [invitedFriends, setInvitedFriends] = useState<Friend[]>([]);
     const [totalBonus, setTotalBonus] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -63,11 +63,12 @@ const FriendsPage = () => {
 
                 <div className="card leaders">
                     <div className="flex items-center gap-2">
-                        <span className="coin-icon">🪨</span>
                         <span className="bonus">+{totalBonus.toLocaleString()}</span>
+                        <img src={stoneImage} alt="Stone" className="stone-icon" />
                     </div>
                     <button onClick={() => navigate("/leaderboard")} className="top-leaders">
                         Top 30 leaders
+                        <span className="arrow"></span>
                     </button>
                 </div>
 
@@ -79,8 +80,8 @@ const FriendsPage = () => {
                         <button onClick={() => handleInvite(false)} className="invite-button">
                             <p className="font-semibold">Invite Fren</p>
                             <p className="text-xs flex items-center gap-1">
-                                <span className="coin-icon">🪨</span> 1,000 + 5% over time{" "}
-                                <span className="for-you">for you and fren</span>
+                                <img src={stoneImage} alt="Stone" className="stone-icon small" />
+                                1,000 + 5% over time <span className="for-you">for you and fren</span>
                             </p>
                         </button>
                     </div>
@@ -91,41 +92,44 @@ const FriendsPage = () => {
                                 Invite Fren with <span className="text-[#0088cc]">Telegram Premium</span>
                             </p>
                             <p className="text-xs flex items-center gap-1">
-                                <span className="coin-icon">🪨</span> 10,000 + 10% over time{" "}
-                                <span className="for-you">for you and fren</span>
+                                <img src={stoneImage} alt="Stone" className="stone-icon small" />
+                                10,000 + 10% over time <span className="for-you">for you and fren</span>
                             </p>
                         </button>
                     </div>
                 </div>
 
                 <p className="invite-text">Your Frens</p>
-                <div className="card friends-list">
-                    {isLoading ? (
-                        <div>Loading...</div>
-                    ) : invitedFriends.length === 0 ? (
-                        <div className="no-friends">
-                            <img src={coinImage} alt="No Friend" className="coin-large" />
-                            <p className="no-fren-text">No Fren yet</p>
-                        </div>
-                    ) : (
-                        invitedFriends.map((friend) => (
+                {isLoading ? (
+                    <div>Loading...</div>
+                ) : invitedFriends.length === 0 ? (
+                    <div className="card no-friends">
+                        <img src={coinImage} alt="No Friend" className="coin-large" />
+                        <p className="no-fren-text">No Fren yet</p>
+                    </div>
+                ) : (
+                    <div className="card friends-list">
+                        {invitedFriends.map((friend) => (
                             <div key={friend.telegramId} className="friend-item">
                                 <img
                                     src={friend.photo_url || (friend.isPremium ? telegramplus : friendIcon)}
                                     alt={friend.username}
                                     className="avatar-icon"
-                                    onError={(e) => { e.currentTarget.src = friend.isPremium ? telegramplus : friendIcon; }}
+                                    onError={(e) => {
+                                        e.currentTarget.src = friend.isPremium ? telegramplus : friendIcon;
+                                    }}
                                 />
                                 <div className="friend-info">
                                     <p className="friend-name">{friend.username}</p>
                                     <p className="friend-bonus">
-                                        <span className="coin-icon">🪨</span> {friend.stones.toLocaleString()}
+                                        <img src={stoneImage} alt="Stone" className="stone-icon small" />
+                                        {friend.stones.toLocaleString()}
                                     </p>
                                 </div>
                             </div>
-                        ))
-                    )}
-                </div>
+                        ))}
+                    </div>
+                )}
             </div>
         </div>
     );

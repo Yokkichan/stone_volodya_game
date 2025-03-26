@@ -4,46 +4,31 @@ export interface Boost {
     count?: number;
 }
 
-export type BoostName = "RechargeSpeed" | "BatteryPack" | "MultiTap" | "AutoBot" | "Turbo";
+export type BoostName = "RechargeSpeed" | "BatteryPack" | "MultiTap" | "AutoBot" | "Refill" | "Boost";
 
 export const getBoostCost = (boostName: BoostName, level: number, isPremium: boolean = false): number => {
-    const baseCosts: { [key in BoostName]: number } = {
-        RechargeSpeed: 100,
-        BatteryPack: 200,
-        MultiTap: 150,
-        AutoBot: 500,
-        Turbo: 500,
+    const costs: { [key in BoostName]: number[] } = {
+        MultiTap: [500, 700, 1000, 1400, 2000, 3400, 4700, 6500, 9000, 13000, 18000],
+        AutoBot: [5000, 9000, 16000, 29000, 52000, 83000, 150000, 270000, 490000, 880000, 1300000],
+        BatteryPack: [750, 1050, 1500, 2100, 3000, 7400, 10000, 14000, 20000, 28000, 38000],
+        RechargeSpeed: [300, 400, 500, 700, 900, 2000, 2600, 3400, 4500, 6000, 13000],
+        Refill: [0],
+        Boost: [0],
     };
-    const multipliers: { [key in BoostName]: number } = {
-        RechargeSpeed: 1.3,
-        BatteryPack: 1.4,
-        MultiTap: 1.5,
-        AutoBot: 1.6,
-        Turbo: 1, // Фиксированная цена для Turbo
-    };
-
-    let cost = Math.floor(baseCosts[boostName] * Math.pow(multipliers[boostName], level));
-    if (boostName === "RechargeSpeed" && level < 5) cost = Math.floor(cost * 0.7); // Скидка 30%
-    if (isPremium && level > 0) cost = Math.floor(cost * 0.5); // VIP скидка 50% (пример)
+    let cost = costs[boostName][Math.min(level, costs[boostName].length - 1)];
+    if (isPremium && level > 0) cost = Math.floor(cost * 0.75); // Скидка 25% для премиум
     return cost;
 };
 
-export const getBoostBonus = (boostName: BoostName, level: number, multiTapLevel: number = 0): string => {
+export const getBoostBonus = (boostName: BoostName, level: number): string => {
     const nextLevel = level + 1;
     switch (boostName) {
-        case "RechargeSpeed":
-            return `+${Math.floor(1 + 0.1 * nextLevel)} energy/sec`;
-        case "BatteryPack":
-            return `+${Math.floor(1000 * Math.pow(1.1, nextLevel))} max energy`;
-        case "MultiTap":
-            return `+${Math.floor(1 + 0.2 * nextLevel)} stones/click`;
-        case "AutoBot":
-            return `+${Math.floor(10 * Math.pow(1.15, nextLevel))} stones/sec`;
-        case "Turbo":
-            let turboBonus = Math.floor(500 * (1 + 0.5 * multiTapLevel));
-            if (multiTapLevel >= 3) turboBonus *= 2; // Комбо Turbo + MultiTap
-            return `+${turboBonus.toLocaleString()} stones`;
-        default:
-            return "";
+        case "MultiTap": return `+${2 + 2 * nextLevel} stones/click`;
+        case "AutoBot": return `+${1 + nextLevel} stones/sec (max 25,000/day)`;
+        case "BatteryPack": return `+${1000 + 500 * nextLevel} max energy`;
+        case "RechargeSpeed": return `+${1 + nextLevel} energy/sec`;
+        case "Refill": return "Full energy refill";
+        case "Boost": return "Double taps and auto-taps for 1 minute";
+        default: return "";
     }
 };

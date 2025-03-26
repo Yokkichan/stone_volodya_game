@@ -6,7 +6,7 @@
     left: 50%;
     transform: translateX(-50%);
     z-index: 20;
-    background: linear-gradient(90deg, #D49163 0%, #8C522B 100%);
+    background: linear-gradient(90deg, #3F3937 0%, #4C4C4C 100%);
     border-radius: 24px 24px 0 0;
     padding: 0.5rem;
     height: 60px;

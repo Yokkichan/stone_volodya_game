@@ -11,6 +11,7 @@ import coinImage from "../assets/volodya_stone.png";
 import BottomNav from "../components/BottomNav";
 import { leagues, LeagueName } from "../utils/leagues";
 import { SocketScoreUpdate, SocketUserUpdate } from "../utils/socket";
+import stoneImage from "../assets/stone.png"; // Новый импорт
 
 interface MainPageProps {
     socket: Socket;
@@ -135,51 +136,6 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
         [autoStonesPerSecond]
     );
 
-    const handleCollect = useCallback(
-        async (event: React.MouseEvent | React.TouchEvent) => {
-            if (energy < 1) return;
-
-            const coin = coinRef.current;
-            if (coin) {
-                const rect = coin.getBoundingClientRect();
-                const clientX = "touches" in event ? event.touches[0].clientX : event.clientX;
-                const clientY = "touches" in event ? event.touches[0].clientY : event.clientY;
-                createStoneEffect(clientX - rect.left, clientY - rect.top);
-
-                const x = Math.abs(rect.x - clientX);
-                const y = Math.abs(rect.y - clientY);
-                const halfWidth = rect.width / 2;
-                const halfHeight = rect.height / 2;
-                const calcAngleX = (x - halfWidth) / 16;
-                const calcAngleY = ((y - halfHeight) / 14) * -1;
-
-                coin.style.perspective = `${halfWidth * 4}px`;
-                if (Math.floor(calcAngleX) === 0 && Math.floor(calcAngleY) === 0) {
-                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`;
-                } else {
-                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg)`;
-                }
-                WebApp.HapticFeedback.impactOccurred("medium");
-
-                setTimeout(() => {
-                    coin.style.transform = "rotateY(0deg) rotateX(0deg)";
-                }, 100);
-            }
-
-            try {
-                const totalStones = stonesPerClick + pendingStones;
-                const updatedData = await updateBalanceAPI(totalStones, true);
-                dispatch(setUser(updatedData));
-                setLastSyncTime(Date.now());
-                setPendingStones(0);
-                socket.emit("updateScore", { id: telegramId, name: username, score: updatedData.stones });
-            } catch (error) {
-                console.error("[MainPage] Tap error:", error);
-            }
-        },
-        [energy, stonesPerClick, pendingStones, dispatch, socket, telegramId, username]
-    );
-
     const createStoneEffect = (x: number, y: number) => {
         const middleSection = middleSectionRef.current;
         if (!middleSection) return;
@@ -200,6 +156,60 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
 
     const displayedStones = stones + pendingStones;
 
+    const handleCollect = useCallback(
+        async (event: React.MouseEvent | React.TouchEvent) => {
+            if (energy < 1) return;
+
+            const coin = coinRef.current;
+            const coinHolder = coinHolderRef.current;
+            if (coin && coinHolder) {
+                const rect = coin.getBoundingClientRect();
+                const clientX = "touches" in event ? event.touches[0].clientX : event.clientX;
+                const clientY = "touches" in event ? event.touches[0].clientY : event.clientY;
+                createStoneEffect(clientX - rect.left, clientY - rect.top);
+
+                const x = Math.abs(rect.x - clientX);
+                const y = Math.abs(rect.y - clientY);
+                const halfWidth = rect.width / 2;
+                const halfHeight = rect.height / 2;
+                const calcAngleX = (x - halfWidth) / 16; // Как в примере
+                const calcAngleY = ((y - halfHeight) / 14) * -1; // Как в примере
+
+                if (Math.floor(calcAngleX) === 0 && Math.floor(calcAngleY) === 0) {
+                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg) scale(0.99)`; // Как в примере
+                } else {
+                    coin.style.transform = `rotateY(${calcAngleX}deg) rotateX(${calcAngleY}deg)`;
+                }
+                coinHolder.style.perspective = `${halfWidth * 4}px`; // Перспектива для контейнера
+                coin.style.perspective = `${halfWidth * 4}px`; // Перспектива для монеты
+                WebApp.HapticFeedback.impactOccurred("medium");
+
+                // Возврат в исходное положение через 150 мс
+                setTimeout(() => {
+                    coin.style.transform = "rotateY(0deg) rotateX(0deg)";
+                }, 150);
+            }
+
+            try {
+                const totalStones = stonesPerClick + pendingStones;
+                const updatedData = await updateBalanceAPI(totalStones, true);
+                dispatch(setUser(updatedData));
+                setLastSyncTime(Date.now());
+                setPendingStones(0);
+                socket.emit("updateScore", { id: telegramId, name: username, score: updatedData.stones });
+            } catch (error) {
+                console.error("[MainPage] Tap error:", error);
+            }
+        },
+        [energy, stonesPerClick, pendingStones, dispatch, socket, telegramId, username]
+    );
+    const handleCollectEnd = useCallback(() => {
+        const coin = coinRef.current;
+        if (coin) {
+            coin.style.transform = "rotateY(0deg) rotateX(0deg)"; // Возврат как в примере
+        }
+    }, []);
+
     return (
         <div className="dashboard">
             <div className="relative z-[10] w-full">
@@ -219,7 +229,7 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                             )}
                         </div>
                         <div className="score-holder stones">
-                            <span>🪨</span>
+                            <img src={stoneImage} alt="Stone" className="stone-icon" />
                             <p>{Math.floor(displayedStones).toLocaleString()}</p>
                         </div>
                     </div>
@@ -229,6 +239,10 @@ const MainPage: React.FC<MainPageProps> = ({ socket }) => {
                             onTouchStart={(e) => {
                                 e.preventDefault();
                                 handleCollect(e);
+                            }}
+                            onTouchEnd={(e) => {
+                                e.preventDefault();
+                                handleCollectEnd();
                             }}
                             disabled={energy < 1}
                             className="coin-button"

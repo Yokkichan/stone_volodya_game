@@ -1,15 +1,15 @@
-// src/pages/EarnPage.tsx
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../store";
 import { setUser } from "../store/slices/userSlice";
 import { completeTask } from "../utils/api";
-import coinLogo from "../assets/coin.png";
+import coinLogo from "../assets/earn/icon_coin.png";
 import subscribeTelegramIcon from "../assets/earn/telegram.png";
 import followTwitterIcon from "../assets/earn/x.png";
 import voteCoinmarketcapIcon from "../assets/earn/coinmarketcap.png";
 import joinRedditIcon from "../assets/earn/reddit.png";
 import shareTiktokIcon from "../assets/earn/tiktok.png";
+import stoneImage from "../assets/stone.png";
 
 interface Task {
     name: string;
@@ -25,6 +25,7 @@ const EarnPage = () => {
     const completedTasks = user?.tasksCompleted || [];
     const [loadingTask, setLoadingTask] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [clickedTasks, setClickedTasks] = useState<string[]>([]);
 
     const onboardingTasks: Task[] = [
         { name: "join_telegram", icon: subscribeTelegramIcon, reward: 1000, label: "Join Our Telegram", link: "https://t.me/stonevolodyacoin" },
@@ -51,7 +52,7 @@ const EarnPage = () => {
         try {
             const updatedUser = await completeTask(task.name);
             dispatch(setUser(updatedUser));
-        } catch (err: unknown) { // Заменили any на unknown
+        } catch (err: unknown) {
             console.error("[EarnPage] Error:", err);
             setError(err instanceof Error ? err.message : "Failed to confirm task. Try again.");
         } finally {
@@ -62,6 +63,12 @@ const EarnPage = () => {
     const handleTaskClick = (task: Task) => {
         if (!completedTasks.includes(task.name)) {
             window.open(task.link, "_blank");
+            setClickedTasks(prev => {
+                if (!prev.includes(task.name)) {
+                    return [...prev, task.name];
+                }
+                return prev;
+            });
         }
     };
 
@@ -76,17 +83,15 @@ const EarnPage = () => {
                 <h2 className="earn-section-title">On Boarding</h2>
                 <div className="earn-card">
                     {onboardingTasks.map((task) => (
-                        <div
-                            key={task.name}
-                            className={`earn-task-item ${completedTasks.includes(task.name) ? "completed" : ""} ${loadingTask === task.name ? "loading" : ""}`}
-                            onClick={() => handleTaskClick(task)}
-                        >
-                            <img src={task.icon} alt={task.label} className="earn-task-icon" />
-                            <div className="earn-task-details">
-                                <span className="earn-task-text">{task.label}</span>
-                                <div className="earn-reward">
-                                    <span className="earn-reward-icon">🪨</span>
-                                    <span className="earn-text-xs">{task.reward}</span>
+                        <div key={task.name} className="earn-task-item">
+                            <div className="earn-task-link" onClick={() => handleTaskClick(task)}>
+                                <img src={task.icon} alt={task.label} className="earn-task-icon" />
+                                <div className="earn-task-details">
+                                    <span className="earn-task-text">{task.label}</span>
+                                    <div className="earn-reward">
+                                        <img src={stoneImage} alt="Stone" className="earn-reward-icon" />
+                                        <span className="earn-text-xs">{task.reward}</span>
+                                    </div>
                                 </div>
                             </div>
                             {completedTasks.includes(task.name) ? (
@@ -97,7 +102,7 @@ const EarnPage = () => {
                                         e.stopPropagation();
                                         handleConfirmTask(task);
                                     }}
-                                    disabled={loadingTask === task.name}
+                                    disabled={loadingTask === task.name || !clickedTasks.includes(task.name)}
                                     className="earn-task-button confirm"
                                 >
                                     {loadingTask === task.name ? "Loading..." : "Confirm"}
@@ -110,17 +115,15 @@ const EarnPage = () => {
                 <h2 className="earn-section-title">Specials</h2>
                 <div className="earn-card">
                     {specialTasks.map((task) => (
-                        <div
-                            key={task.name}
-                            className={`earn-task-item ${completedTasks.includes(task.name) ? "completed" : ""} ${loadingTask === task.name ? "loading" : ""}`}
-                            onClick={() => handleTaskClick(task)}
-                        >
-                            <img src={task.icon} alt={task.label} className="earn-task-icon" />
-                            <div className="earn-task-details">
-                                <span className="earn-task-text">{task.label}</span>
-                                <div className="earn-reward">
-                                    <span className="earn-reward-icon">🪨</span>
-                                    <span className="earn-text-xs">{task.reward}</span>
+                        <div key={task.name} className="earn-task-item">
+                            <div className="earn-task-link" onClick={() => handleTaskClick(task)}>
+                                <img src={task.icon} alt={task.label} className="earn-task-icon" />
+                                <div className="earn-task-details">
+                                    <span className="earn-task-text">{task.label}</span>
+                                    <div className="earn-reward">
+                                        <img src={stoneImage} alt="Stone" className="earn-reward-icon" />
+                                        <span className="earn-text-xs">{task.reward}</span>
+                                    </div>
                                 </div>
                             </div>
                             {completedTasks.includes(task.name) ? (
@@ -131,7 +134,7 @@ const EarnPage = () => {
                                         e.stopPropagation();
                                         handleConfirmTask(task);
                                     }}
-                                    disabled={loadingTask === task.name}
+                                    disabled={loadingTask === task.name || !clickedTasks.includes(task.name)}
                                     className="earn-task-button confirm"
                                 >
                                     {loadingTask === task.name ? "Loading..." : "Confirm"}

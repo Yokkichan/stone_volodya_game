@@ -8,13 +8,27 @@
 }
 
 .app-container {
-  position: relative;
-  height: 100%;
+  position: fixed; /* Фиксируем контейнер */
+  top: 0;
+  left: 0;
+  height: 100vh; /* Полная высота viewport */
   width: 100vw;
-  overflow: hidden;
+  overflow: hidden; /* Запрещаем прокрутку внутри контейнера */
   display: flex;
   flex-direction: column;
-  touch-action: pan-x pan-y; /* Разрешает только прокрутку, запрещает масштабирование */
+  touch-action: pan-x pan-y; /* Разрешаем только нужные жесты */
+  user-select: none; /* Запрещаем выделение внутри контейнера */
+  -webkit-user-select: none; /* Для Safari */
+  -moz-user-select: none; /* Для Firefox */
+  -ms-user-select: none; /* Для Edge */
+}
+
+/* Запрещаем выделение для всех дочерних элементов */
+.app-container * {
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
 }
 
 .background-layer {
@@ -23,7 +37,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("assets/background1.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -38,4 +51,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(82, 82, 82, 0.58);
+
 }
+
+@tailwind utilities;

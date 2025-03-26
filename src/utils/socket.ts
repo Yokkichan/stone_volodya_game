@@ -1,7 +1,7 @@
 import { io, Socket } from "socket.io-client";
 import { AppDispatch } from "../store";
 
-const SOCKET_URL = "https://bishop-restoration-come-dayton.trycloudflare.com";
+const SOCKET_URL = "https://fear-worldcat-ev-spent.trycloudflare.com";
 
 export const socket: Socket = io(SOCKET_URL, { autoConnect: false }); // Отключаем авто-подключение, управляем вручную
 
